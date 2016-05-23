@@ -3,8 +3,8 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyP = require('body-parser');
 
-var Task = require(__dirname + '/app/model/task');
-var User = require(__dirname + '/app/model/user');
+var Task = require(__dirname + "/app/model/task");
+var User = require(__dirname + "/app/model/user");
 
 mongoose.connect('mongodb://localhost:27017/xws');
 
@@ -39,21 +39,27 @@ var user3 = new User ({
 
 var task = new Task({
 	title : 'Kurac',
-	description: 'rac'
+	description: 'rac',
+	priority : 'Blocker',
+	status : 'To do'
 });
 
 task.save();
 
 var task1 = new Task({
 	title : 'Kurac1',
-	description: 'rac1'
+	description: 'rac1',
+	priority : 'Critical',
+	status : 'In progress'
 });
 
 task1.save();
 
 var task2= new Task({
 	title : 'Kurac2',
-	description: 'rac2'
+	description: 'rac2',
+	priority : 'Major',
+	status : 'Done'
 });
 
 task2.save();
@@ -68,15 +74,37 @@ taskRouter
 	});
 })
 .post('/',function(req,res) {
-	Task(req.body).save(function(err)
-	{
-		if(err) throw err;
-	});
-	
+
+	var taskic = new Task ({
+		title : req.body.title,
+		description : req.body.description,
+		priority : req.body.priority,
+		status : req.body.status
+	})
+
+
+  taskic.save(function(err,resp) {
+        if(err) {
+            console.log(err);
+            res.send({
+                message :'something went wrong'
+            });
+        } else {
+            res.send({
+                message:'the appointment has bees saved'
+            });
+        }           
+
+    });
 })
-
-
-
+.delete('/:id',function(req,res,next) {
+		Task.remove({
+			"_id" : req.params.id
+		},function(err, successIndicator) {
+		    if (err) throw(err);
+		    res.json(successIndicator);
+		  });
+});
 
 var userRouter = express.Router();
 userRouter
@@ -88,6 +116,7 @@ userRouter
 		});
 })
 	
+
 app.use('/tasks/', taskRouter);
 app.use('/user/',userRouter);
 /*
@@ -141,10 +170,6 @@ app.get('/Projekat/:id', function(res,req) {
 	});
 });
 */
-
-app.use('api/tasks',taskRouter);
-
-
 app.listen(3000);
 console.log("Server running on port 3000");
 

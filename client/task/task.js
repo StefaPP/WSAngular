@@ -1,6 +1,6 @@
 (function(angular) { 
 	angular.module('task',['taskResource'])
-		.controller('taskCtrl',function($scope,Task) {
+		.controller('taskCtrl',function($scope,Task,$window) {
 			var load = function () {
 				$scope.Task = Task.query();
 				$scope.task = new Task();
@@ -10,11 +10,14 @@
 		
 		$scope.addTask = function() {
 			Task.save($scope.task);
-			console.log($scope.task._id);
+			console.log($scope.task.id);
 			load();
 		};
 
-		})
+		$scope.remove = function(task) {
+			task.$delete(load);
+		}
+	})
 }(angular));
 
 
