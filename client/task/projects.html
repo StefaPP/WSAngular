@@ -1,0 +1,18 @@
+<div>
+	<p>
+	<h1>Projects</h1>
+	<table class="table">
+  <th>Predmet</th>
+  <th>Rok</th>
+  <th>Status</th>
+  <th>&nbsp</th>
+  		<tr ng-repeat="task in Task">
+        <td>{{task.title}}</td>
+         <td>{{task.description}}</td>
+         <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
+          <td><button class="btn btn-danger" ng-click="remove(task._id)">Remove</button>
+          </td>
+        </tr>
+	</table>
+	</p>
+</div>
