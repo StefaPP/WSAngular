@@ -11,7 +11,7 @@ var taskSchema = new Schema({
 	description: String,
 	priority:{
 		type: String,
-		enum: ['Blocker','Critical','Major','Minor','Trivia']
+		enum: ['Blocker','Critical','Major','Minor','Trivial']
 	},
 	createdAt : Date,
 	status : {

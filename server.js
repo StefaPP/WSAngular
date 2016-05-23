@@ -67,6 +67,16 @@ taskRouter
 		res.json(docs);
 	});
 })
+.post('/',function(req,res) {
+	Task(req.body).save(function(err)
+	{
+		if(err) throw err;
+	});
+	
+})
+
+
+
 
 var userRouter = express.Router();
 userRouter

@@ -7,6 +7,13 @@
 			}
 			
 			load();
+		
+		$scope.addTask = function() {
+			Task.save($scope.task);
+			console.log($scope.task._id);
+			load();
+		};
+
 		})
 }(angular));
 
