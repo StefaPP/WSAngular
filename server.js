@@ -16,7 +16,8 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 var proj1 = new Project({
 	sign : 'XWS',
 	title : "Ws projekat",
-	description : 'bleja'
+	description : 'bleja',
+	tasks : {title : 'Kurac'}
 });
 
 proj1.save();
@@ -34,12 +35,12 @@ var proj3 = new Project({
 	sign : 'SOK',
 	title : "SOK projekat",
 	description : '...',
-	Task : '1'
+	tasks : {title : 'Kurac'}
 });
 
 proj3.save();
 
-console.log(proj1);
+console.log(proj1.tasks);
 
 var user1 = new User ({
 	
@@ -47,7 +48,11 @@ var user1 = new User ({
 	password:'kuronjic',
 	role : 'dev'
 });
-	user1.save();
+
+
+
+user1.save();
+
 var user2 = new User ({
 	
 	username:'kuronja1',
@@ -78,7 +83,8 @@ var task1 = new Task({
 	title : 'Kurac1',
 	description: 'rac1',
 	priority : 'Critical',
-	status : 'In progress'
+	status : 'In progress',
+	project : {sign : "SOK"}
 });
 
 task1.save();
@@ -147,6 +153,7 @@ projectRouter
 	.get('/',function(req,res) {
 		Project.find(function(err,docs) {
 			if(err) console.error(err);
+			
 			res.json(docs);
 		});
 })
@@ -175,10 +182,10 @@ projectRouter
         }           
 */
 })
-.get('/:id', function(res,req) {
+.get('/:_id', function(res,req) {
 	var id = req.params.id;
 	console.log(id);
-	Project.findOne({ _id: mongojs.ObjectId(id)}, function(err,doc){
+	Project.findOne({ '_id' : id}, function(err,doc){
 		console.log(doc);
 		res.json(doc);
 	});

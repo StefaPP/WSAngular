@@ -46,10 +46,12 @@
         <td>{{project.sign}}</td>
          <td>{{project.title}}</td>
          <td>{{project.description}}</td>
-         <td>{{project.Task.id}}</td>
+         <td>{{project.tasks.id}}</td>
           <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
           <td><button class="btn btn-danger" ng-click="remove(task)">Remove</button>
-          <td><button class="btn btn-danger" ng-click="show(project._id)">Add task</button>
+          <td><button class="btn btn-danger" ng-click="show()">Add task</button>
+          </td>
+          <td><button class="btn btn-danger" ng-click="go()">Redirect</button>
           </td>
         </tr>
 	</table>

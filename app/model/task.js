@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var Project = require(__dirname + '/project');
 var taskSchema = new Schema({
 	
 	title: {
@@ -18,7 +18,7 @@ var taskSchema = new Schema({
 		type: String,
 		enum: ['To do','In progress','Verify','Done']
 	},
-	Project : Schema.ObjectId
+	project : [Project]
 });
 
 var Task = mongoose.model('Task',taskSchema);
