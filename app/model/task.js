@@ -18,8 +18,7 @@ var taskSchema = new Schema({
 		type: String,
 		enum: ['To do','In progress','Verify','Done']
 	},
-	User : Schema.ObjectId
-
+	Project : Schema.ObjectId
 });
 
 var Task = mongoose.model('Task',taskSchema);

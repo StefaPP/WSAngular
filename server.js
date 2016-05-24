@@ -33,7 +33,8 @@ proj2.save();
 var proj3 = new Project({
 	sign : 'SOK',
 	title : "SOK projekat",
-	description : '...'
+	description : '...',
+	Task : '1'
 });
 
 proj3.save();
@@ -161,7 +162,7 @@ projectRouter
 		Task : req.body.task.id
 	})*/
  
-   projektic.save(function(err,resp) {
+   /*projektic.save(function(err,resp) {
         if(err) {
             console.log(err);
             res.send({
@@ -172,11 +173,16 @@ projectRouter
                 message:'the appointment has bees saved'
             });
         }           
-
-    });
-
-
+*/
 })
+.get('/:id', function(res,req) {
+	var id = req.params.id;
+	console.log(id);
+	Project.findOne({ _id: mongojs.ObjectId(id)}, function(err,doc){
+		console.log(doc);
+		res.json(doc);
+	});
+});
 
 app.use('/tasks/', taskRouter);
 app.use('/user/',userRouter);

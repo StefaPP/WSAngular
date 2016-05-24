@@ -23,8 +23,8 @@
                 <input class="form-control" ng-model="project.description"></input>
             </td>
       <td>
-        <select class="c-select" ng-model="task.id" ng-options='task.id as task.title for task in Task'>
-          <option value="">Select task</option>
+        <select class="c-select" ng-model="user.id" ng-options='user.id as user.username for user in User'>
+          <option value="">Select user</option>
       </select>
       </td>    
          <td>
@@ -40,16 +40,65 @@
   <th>Sign</th>
   <th>Title</th>
   <th>Description</th>
+  <th>Tasks</th>  
   <th>&nbsp</th>
   		<tr ng-repeat="project in Project">
         <td>{{project.sign}}</td>
          <td>{{project.title}}</td>
          <td>{{project.description}}</td>
-         <td>{{project.task.title}}</td>
-         <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
+         <td>{{project.Task.id}}</td>
+          <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
           <td><button class="btn btn-danger" ng-click="remove(task)">Remove</button>
+          <td><button class="btn btn-danger" ng-click="show(project._id)">Add task</button>
           </td>
         </tr>
 	</table>
-	</p>
+  </p>
+  <div ng-show="value">
+        <h1> Adding new task to {{project.title}}<h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>&nbsp</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <input class="form-control" ng-model="task.title"></input>
+            </td>
+            <td>
+                <input class="form-control" ng-model="task.description"></td/input>
+            </td>
+      <td>
+        <select class="c-select" ng-model="task.priority">
+          <option value="Blocker">Blocker</option>
+          <option value="Critical">Critical</option>
+          <option value="Major">Major</option>
+          <option value="Minor">Minor</option>
+          <option value="Trivial">Trivial</option>
+      </select>
+      </td>
+      <td>
+        <select class="c-select" ng-model="task.status">>
+          <option value="To Do">To Do</option>
+          <option value="In progress">In progress</option>
+          <option value="Verify">Verify</option>
+          <option value="Done">Done</option>
+      </select>
+
+      </td>
+            <td>
+            <button class="btn btn-primary" ng-click="addTask()">Add task
+            </button>
+            </td>
+        </tr>
+    </tbody>
+</table>  
+  </div>
 </div>
