@@ -1,0 +1,55 @@
+<div>
+  <h1> Adding new project <h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sign</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Task</th>
+      <th>&nbsp</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <input class="form-control" ng-model="project.sign"></input>
+            </td>
+            <td>
+                <input class="form-control" ng-model="project.title"></input>
+            </td>
+            <td>
+                <input class="form-control" ng-model="project.description"></input>
+            </td>
+      <td>
+        <select class="c-select" ng-model="task.id" ng-options='task.id as task.title for task in Task'>
+          <option value="">Select task</option>
+      </select>
+      </td>    
+         <td>
+            <button class="btn btn-primary" ng-click="addProject(task._id)">Add Project
+            </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+	<p>
+	<h1>Projects</h1>
+	<table class="table">
+  <th>Sign</th>
+  <th>Title</th>
+  <th>Description</th>
+  <th>&nbsp</th>
+  		<tr ng-repeat="project in Project">
+        <td>{{project.sign}}</td>
+         <td>{{project.title}}</td>
+         <td>{{project.description}}</td>
+         <td>{{project.task.title}}</td>
+         <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
+          <td><button class="btn btn-danger" ng-click="remove(task)">Remove</button>
+          </td>
+        </tr>
+	</table>
+	</p>
+</div>
