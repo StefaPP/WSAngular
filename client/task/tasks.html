@@ -1,4 +1,61 @@
 <div>
+
+<!-- <div class="jumbotron">
+
+	  <h1>Project details</h1>
+  <div><h2>{{project.sign}}</h2></div>
+  <div><h2>{{project.title}}</h2></div>
+</div>
+ -->  
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Project details</h3>
+  </div>
+  <div class="panel-body">
+  <h2>{{project.sign}}</h2>
+  <h2>{{project.title}}</h2>
+  </div>
+</div>
+
+ <button class="btn btn-primary" ng-click="show()">Show tasks of this project
+  </button>
+  <div ng-show = "value">
+ <table class="table">
+ <th>Title</th>
+ <th>Description</th>
+ <th>Status</th>
+ <tr ng-repeat="task in project.tasks">
+ <td>{{task.title}}</td>
+ <td>{{task.description}}</td>
+ <td>{{task.status}}</td>
+ </tr>
+ </table>
+ 
+
+<h1> Adding new task <h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <input class="form-control" ng-model="task.title"></input>
+            </td>
+            <td>
+            <button class="btn btn-primary" ng-click="addTask(project._id)">Add task
+            </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+ </div>
+</div>
+
+<!-- <div>
 <h1> Adding new task <h1>
 <table class="table">
     <thead>
@@ -65,4 +122,9 @@
         </tr>
 	</table>
 	</p>
-</div>
+</div> -->
+
+
+<!-- 2. prica -->
+
+

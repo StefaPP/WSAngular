@@ -1,5 +1,5 @@
 <div>
-  <h1> Adding new project <h1>
+<!--   <h1> Adding new project <h1>
 <table class="table">
     <thead>
         <tr>
@@ -34,30 +34,32 @@
         </tr>
     </tbody>
 </table>
-	<p>
+ -->	<p>
 	<h1>Projects</h1>
 	<table class="table">
   <th>Sign</th>
   <th>Title</th>
   <th>Description</th>
-  <th>Tasks</th>  
+  <th>&nbsp</th>
   <th>&nbsp</th>
   		<tr ng-repeat="project in Project">
         <td>{{project.sign}}</td>
          <td>{{project.title}}</td>
          <td>{{project.description}}</td>
-         <td>{{project.tasks.id}}</td>
-          <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
-          <td><button class="btn btn-danger" ng-click="remove(task)">Remove</button>
-          <td><button class="btn btn-danger" ng-click="show()">Add task</button>
+<!--          <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
+          --> <td><button class="btn btn-danger" ng-click="remove(project._id)">Remove</button>
+          <!-- <td><button class="btn btn-danger" ng-click="show()">Add task</button>
           </td>
-          <td><button class="btn btn-danger" ng-click="go()">Redirect</button>
+           -->
+           <td><button class="btn btn-info" ng-click="details(project)">Details</button>
+        <!--    <td><button class="btn btn-danger" ng-click="go()">Redirect</button>
+     
           </td>
-        </tr>
+         --></tr>
 	</table>
   </p>
   <div ng-show="value">
-        <h1> Adding new task to {{project.title}}<h1>
+ <!--  <h1> Adding new task<h1>
 <table class="table">
     <thead>
         <tr>
@@ -102,5 +104,6 @@
         </tr>
     </tbody>
 </table>  
-  </div>
+  --> 
+</div>
 </div>

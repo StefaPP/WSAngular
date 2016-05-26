@@ -1,6 +1,7 @@
 (function(angular) { 
 	angular.module('task',['taskResource'])
 		.controller('taskCtrl',function($scope,Task,$window) {
+			
 			var load = function () {
 				$scope.Task = Task.query();
 				$scope.task = new Task();

@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Task = require(__dirname + "/task"); 
-var User = require(__dirname + "/user"); 
+
 var projectSchema = new Schema({
 	
 	sign : {
@@ -15,8 +14,7 @@ var projectSchema = new Schema({
 		unique : true
 	},
 	description: String,
-	tasks : [Task],
-	users : [User]
+	tasks : [{ type: Schema.Types.ObjectId, ref: 'Task'}]
 
 });
 

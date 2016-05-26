@@ -13,121 +13,46 @@ app.use(express.static(__dirname + "/client"));
 app.use(bodyP.json());
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
-var proj1 = new Project({
-	sign : 'XWS',
-	title : "Ws projekat",
-	description : 'bleja',
-	tasks : {title : 'Kurac'}
-});
 
-proj1.save();
-
-
-var proj2 = new Project({
-	sign : 'PIF',
-	title : "Poslovna projekat",
-	description : 'smor'
-});
-
-proj2.save();
-
-var proj3 = new Project({
-	sign : 'SOK',
-	title : "SOK projekat",
-	description : '...',
-	tasks : {title : 'Kurac'}
-});
-
-proj3.save();
-
-console.log(proj1.tasks);
-
-var user1 = new User ({
-	
-	username:'kuronja',
-	password:'kuronjic',
-	role : 'dev'
-});
-
-
-
-user1.save();
-
-var user2 = new User ({
-	
-	username:'kuronja1',
-	password:'kuronjic1',
-	role : 'spremacica'
-});
-
-	user2.save();
-var user3 = new User ({
-	
-	username:'kuronja2',
-	password:'kuronjic2',
-	role : 'leader'
-});
-	
-	user3.save();
-
-var task = new Task({
-	title : 'Kurac',
-	description: 'rac',
-	priority : 'Blocker',
-	status : 'To do'
-});
-
-task.save();
-
-var task1 = new Task({
-	title : 'Kurac1',
-	description: 'rac1',
-	priority : 'Critical',
-	status : 'In progress',
-	project : {sign : "SOK"}
-});
-
-task1.save();
-
-var task2= new Task({
-	title : 'Kurac2',
-	description: 'rac2',
-	priority : 'Major',
-	status : 'Done'
-});
-
-task2.save();
 
 var taskRouter = express.Router();
 taskRouter
- .get('/',function(req,res) {
+.get('/:id',function (req,res,next){
+  Project.findOne({ "_id" : req.params.id }, function(err,project){
+      if(err) console.log(err);
+	  
+        Task.find({ "_id" : { $in: project.tasks }}, function(err, docs){
+          if(err) throw(err);
+         console.log(docs + " SAAAAAAAAAAAAAAAAAA");
+          res.json(docs);
+        })
+  })
+})
+.get('/',function(req,res) {
 	Task.find(function(err,docs) {
 	 if(err) return console.error(err);
+	//	console.log(docs + 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 		res.json(docs);
-	});
+	})
 })
-.post('/',function(req,res) {
-
+.post('/:id',function(req,res) {
+	console.log("Usooooo");
 	var taskic = new Task ({
 		title : req.body.title,
 		description : req.body.description,
 		priority : req.body.priority,
 		status : req.body.status
-	})
- 
-   taskic.save(function(err,resp) {
-        if(err) {
-            console.log(err);
-            res.send({
-                message :'something went wrong'
-            });
-        } else {
-            res.send({
-                message:'the appointment has bees saved'
-            });
-        }           
-
+	});
+	Project.findOne({"_id":req.params.id},function(err,project) {
+		if(err) throw(err);
+	taskic.save(function(err,task){
+		if(err) throw(err);
+	Project.findByIdAndUpdate(project._id,{$push:{"tasks" : task._id}},function (err, entry) {
+        if(err) next(err);
+        res.json(entry);
+      });
     });
+  });
 })
 .delete('/:id',function(req,res,next) {
 		Task.remove({
@@ -156,6 +81,14 @@ projectRouter
 			
 			res.json(docs);
 		});
+})
+.get('/:id',function(req,res) {
+		Project.findOne({
+    "_id": req.params.id
+  }).populate('tasks').exec(function(err, project) {
+      if (err) console.log(err);
+	  res.json(project);
+    });
 })
 .post('/',function(req,res) {
 
@@ -207,6 +140,25 @@ console.log("Server running on port 3000");
 
 
 
+/*///*var taskic = new Task ({
+		title : req.body.title,
+		description : req.body.description,
+		priority : req.body.priority,
+		status : req.body.status
+	})
+ 
+   taskic.save(function(err,resp) {
+        if(err) {
+            console.log(err);
+            res.send({
+                message :'something went wrong'
+            });
+        } else {
+            res.send({
+                message:'the appointment has bees saved'
+            });
+        }           
 
+    });*/
 
 
