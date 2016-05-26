@@ -14,7 +14,6 @@ app.use(bodyP.json());
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 
-
 var taskRouter = express.Router();
 taskRouter
 .get('/:id',function (req,res,next){
@@ -23,7 +22,6 @@ taskRouter
 	  
         Task.find({ "_id" : { $in: project.tasks }}, function(err, docs){
           if(err) throw(err);
-         console.log(docs + " SAAAAAAAAAAAAAAAAAA");
           res.json(docs);
         })
   })
@@ -31,12 +29,11 @@ taskRouter
 .get('/',function(req,res) {
 	Task.find(function(err,docs) {
 	 if(err) return console.error(err);
-	//	console.log(docs + 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 		res.json(docs);
 	})
 })
-.post('/:id',function(req,res) {
-	console.log("Usooooo");
+.post('/project/:id',function(req,res) {
+
 	var taskic = new Task ({
 		title : req.body.title,
 		description : req.body.description,
@@ -47,7 +44,7 @@ taskRouter
 		if(err) throw(err);
 	taskic.save(function(err,task){
 		if(err) throw(err);
-	Project.findByIdAndUpdate(project._id,{$push:{"tasks" : task._id}},function (err, entry) {
+	Project.findByIdAndUpdate(project._id,{$push:{"tasks":task._id}},function (err, entry) {
         if(err) next(err);
         res.json(entry);
       });
@@ -92,17 +89,13 @@ projectRouter
 })
 .post('/',function(req,res) {
 
-	var projektic = req.body;
-	console.log(projektic); 
-
-	/*new Project ({
+	var projektic = new Project ({
 		sign : req.body.sign,
 		title : req.body.title,
-		description : req.body.description,
-		Task : req.body.task.id
-	})*/
+		description : req.body.description
+	})
  
-   /*projektic.save(function(err,resp) {
+   projektic.save(function(err,resp) {
         if(err) {
             console.log(err);
             res.send({
@@ -113,7 +106,8 @@ projectRouter
                 message:'the appointment has bees saved'
             });
         }           
-*/
+})
+
 })
 .get('/:_id', function(res,req) {
 	var id = req.params.id;

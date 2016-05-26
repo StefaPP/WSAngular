@@ -23,21 +23,30 @@
  <table class="table">
  <th>Title</th>
  <th>Description</th>
+ <th>Priority</th>
  <th>Status</th>
+ <th>Date created</th>
  <tr ng-repeat="task in project.tasks">
  <td>{{task.title}}</td>
  <td>{{task.description}}</td>
+ <td>{{task.priority}}</td>
  <td>{{task.status}}</td>
+ <td>{{task.createdAt}}</td>
  </tr>
  </table>
  
+ <hr/>
 
 <h1> Adding new task <h1>
 <table class="table">
     <thead>
         <tr>
             <th>Title</th>
-            <th>&nbsp</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date</th>
+           <!--  <th>&nbsp</th> -->
         </tr>
     </thead>
     <tbody>
@@ -45,6 +54,26 @@
             <td>
                 <input class="form-control" ng-model="task.title"></input>
             </td>
+             <td>
+                <input class="form-control" ng-model="task.description"></input>
+            </td>
+            <td>
+            <select class="c-select" ng-model="task.priority">
+              <option value="Blocker">Blocker</option>
+              <option value="Critical">Critical</option>
+              <option value="Major">Major</option>
+              <option value="Minor">Minor</option>
+              <option value="Trivial">Trivial</option>
+          </select>
+          </td>
+          <td>
+            <select class="c-select" ng-model="task.status">>
+              <option value="To Do">To Do</option>
+              <option value="In progress">In progress</option>
+              <option value="Verify">Verify</option>
+              <option value="Done">Done</option>
+          </select>
+          </td>
             <td>
             <button class="btn btn-primary" ng-click="addTask(project._id)">Add task
             </button>
