@@ -6,7 +6,7 @@ var bodyP = require('body-parser');
 var Task = require(__dirname + "/app/model/task");
 var User = require(__dirname + "/app/model/user");
 var Project = require(__dirname + "/app/model/project");
-
+var Comment = require(__dirname + "/app/model/comment");
 mongoose.connect('mongodb://localhost:27017/xws');
 
 app.use(express.static(__dirname + "/client"));
@@ -20,10 +20,12 @@ taskRouter
   Project.findOne({ "_id" : req.params.id }, function(err,project){
       if(err) console.log(err);
 	  
-        Task.find({ "_id" : { $in: project.tasks }}, function(err, docs){
-          if(err) throw(err);
-          res.json(docs);
-        })
+        Task.find({ "_id" : { $in: project.tasks }})
+        .populate('comments')
+        .exec(function(err, project) {
+     		 if (err) console.log(err);
+	  		 res.json(project);
+    });
   })
 })
 .get('/',function(req,res) {
@@ -67,6 +69,23 @@ userRouter
 			if(err) console.error(err);
 			res.json(docs);
 		});
+})
+.post('/project/:id/user',function(req,res) {
+	console.log('USSSSOOOOO');
+	Project.findOne({"_id" : req.params.id},function(err,project) {
+		console.log(project + '   NAAAAAAAAAAAAAAAAAAAAASAOOOO GA');
+		if(err) throw(err);
+	User.findOne({"_userId": req.params.userId},function(err,user) {
+		console.log(user + "USEEEEEEEEEEEEEEEEEEER")
+		if(err) throw(err);
+		console.log(project._id + "\n" + user._id);
+	Project.findByIdAndUpdate(project._id,{$push:{"users":user._id}},function(err, entry) {
+        if(err) throw(err);
+        res.json(entry);
+
+			});
+		})
+	});
 });
 	
 var projectRouter = express.Router();
@@ -82,7 +101,9 @@ projectRouter
 .get('/:id',function(req,res) {
 		Project.findOne({
     "_id": req.params.id
-  }).populate('tasks').exec(function(err, project) {
+  }).populate('tasks')
+	.populate('users')
+	.exec(function(err, project) {
       if (err) console.log(err);
 	  res.json(project);
     });
@@ -108,51 +129,49 @@ projectRouter
         }           
 })
 
-})
-.get('/:_id', function(res,req) {
-	var id = req.params.id;
-	console.log(id);
-	Project.findOne({ '_id' : id}, function(err,doc){
-		console.log(doc);
-		res.json(doc);
-	});
 });
+
+var commentRouter = express.Router();
+
+commentRouter
+.post('/:id',function(req, res, next) {
+  console.log('commentRouter ' +  req.params.id )
+  var comment = new Comment(req.body);
+  console.log(comment);
+  Task.findOne({"_id":req.params.id},function (err, entry) {
+    console.log(entry + "  JESI LI NULL??");
+    if(err) next(err);
+    comment.save(function (err, comment) {
+      if(err) next(err);
+    	Task.findByIdAndUpdate(entry._id, {$push:{"comments":comment._id}}, function (err, entry) {
+        if(err) next(err);
+        res.json(entry);
+      });
+    });
+  });
+})
+.delete('/:id', function (req, res, next) {
+  Comment.remove({"_id":req.params.id},function (err, successIndicator) {
+    if(err) next(err);
+    res.json(successIndicator);
+  })
+
+})
+.get('/:id',function (req,res,next){
+  Task.findOne({ '_id' : req.params.id }, function(err,entry){
+      if(err) next (err);
+        Comment.find({ '_id' : { $in:entry.comments}},function(err, docs){
+          console.log(docs);
+          res.json(docs);
+        })
+    })
+});
+
 
 app.use('/tasks/', taskRouter);
 app.use('/user/',userRouter);
 app.use('/projects/',projectRouter);
+app.use('/comments/',commentRouter);
 
 app.listen(3000);
 console.log("Server running on port 3000");
-
-
-
-
-
-
-
-
-
-
-/*///*var taskic = new Task ({
-		title : req.body.title,
-		description : req.body.description,
-		priority : req.body.priority,
-		status : req.body.status
-	})
- 
-   taskic.save(function(err,resp) {
-        if(err) {
-            console.log(err);
-            res.send({
-                message :'something went wrong'
-            });
-        } else {
-            res.send({
-                message:'the appointment has bees saved'
-            });
-        }           
-
-    });*/
-
-

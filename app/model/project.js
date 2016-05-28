@@ -14,7 +14,8 @@ var projectSchema = new Schema({
 		unique : true
 	},
 	description: String,
-	tasks : [{ type: Schema.Types.ObjectId, ref: 'Task'}]
+	tasks : [{ type: Schema.Types.ObjectId, ref: 'Task'}],
+	users : [{ type: Schema.Types.ObjectId, ref: 'User'}]
 
 });
 

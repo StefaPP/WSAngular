@@ -1,6 +1,6 @@
 (function(angular) { 
 
-var myApp = angular.module('myApp',['ngRoute','ngResource','task','user','project']);
+var myApp = angular.module('myApp',['ngRoute','ngResource','task','user','project','ui.bootstrap','comment']);
 myApp.config(function($routeProvider) {
 	$routeProvider
 	.when('/#',{

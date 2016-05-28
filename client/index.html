@@ -3,12 +3,15 @@
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/angular-resource/angular-resource.js"></script>
 <script src="../bower_components/angular-route/angular-route.js"></script>
+<script src="../bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="task/taskResource.js"></script>
 <script src="task/task.js"></script>
 <script src="user/user.js"></script>
 <script src="user/userResource.js"></script>
 <script src="project/project.js"></script>
 <script src="project/projectResource.js"></script>
+<script src="comment/comment.js"></script>
+<script src="comment/commentResource.js"></script>
 <script src="index.js"></script>
 
 <!-- Latest compiled and minified CSS -->
@@ -19,6 +22,51 @@
 
 
 <style>
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
 body {
     margin: 0;
 }
@@ -31,7 +79,7 @@ body {
     opacity:0.95;
 }
 
-ul {
+.nvb {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -43,7 +91,7 @@ ul {
     overflow: auto;
 }
 
-li a {
+.nvb li a {
     display: block;
     color: white;
 	font-size: 24px;
@@ -62,21 +110,21 @@ hr {
     color: #ccc;
 }
 
-li a:hover:not(.active) {
+.nvb li a:hover:not(.active) {
     background-color: #555;
     color: white;
 }
 </style>
 </head>
 <body ng-app="myApp">
-<ul>
+<ul class="nvb">
   <li><a ng-href="#/home" href="#/home">Dashboard</a></li>
   <li><a ng-href="#/projects" href="#/projects">Projects</a></li>
   <li><a ng-href="#/tasks" href="#/tasks">Tasks</a></li>
   <li><a ng-href="#/account" href="#/account">Account</a></li>
   <li><a ng-href="#/about" href="#/about">About</a></li>
 </ul>
-<div ng-view style="margin-left:25%;padding:1px 16px;height:1000px;"> 
+<div ng-view style="margin-left:20%;padding:1px 16px;height:1000px;"> 
 </div>
 </body>
 </html>
