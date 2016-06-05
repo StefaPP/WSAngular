@@ -5,22 +5,17 @@
   <th>Sign</th>
   <th>Title</th>
   <th>Description</th>
-  <th>&nbsp</th>
-  <th>&nbsp</th>
+  <th>&nbsp;</th>
+  <th>&nbsp;</th>
+  <th>&nbsp;</th>
   		<tr ng-repeat="project in Project">
         <td>{{project.sign}}</td>
          <td>{{project.title}}</td>
          <td>{{project.description}}</td>
-<!--          <td><button class="btn btn-warning" ng-click="edit(task._id)">Edit</button></td>
-          --> <td><button class="btn btn-danger" ng-click="remove(project._id)">Remove</button>
-          <!-- <td><button class="btn btn-danger" ng-click="show()">Add task</button>
-          </td>
-           -->
-           <td><button class="btn btn-info" ng-click="details(project)">Details</button>
-        <!--    <td><button class="btn btn-danger" ng-click="go()">Redirect</button>
-     
-          </td>
-         --></tr>
+          <td><button class="btn btn-danger" ng-click="remove(project._id)">Remove</button></td>
+						<td><button class="btn btn-warning" ng-click="updateProjectShow(project._id)" >Update Project</button></td>
+           <td><button class="btn btn-info" ng-click="details(project)">Details</button></td>
+   </tr>
 	</table>
   <td><button class="btn btn-primary" ng-click="show()">&nbsp;&nbsp;&nbsp;&nbsp;Add new project &nbsp;&nbsp;&nbsp;&nbsp;</button>
   </p>
@@ -46,17 +41,39 @@
             <td>
                 <input class="form-control" ng-model="project.description"></input>
             </td>
-      <!-- <td>
-        <select class="c-select" ng-model="user.id" ng-options='user.id as user.username for user in User'>
-          <option value="">Select user</option>
-      </select>
-      </td>    
-       -->   <td>
-            <button class="btn btn-primary" ng-click="addProject(project._id)">Add Project
-            </button>
-            </td>
+      		<td><button class="btn btn-primary" ng-click="addProject(project._id)">Add Project</button></td>
+
         </tr>
     </tbody>
 </table>
 </div>
+<div ng-show="valueForUpdate">
+<h1> Update project <h1>
+<table class="table">
+	<thead>
+			<tr>
+					<th>Sign</th>
+					<th>Title</th>
+					<th>Description</th>
+					<th>&nbsp;</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr ng-repeat="pro in projectUpd">
+					<td>
+							<input class="form-control" ng-model="pro.sign"></input>
+					</td>
+					<td>
+							<input class="form-control" ng-model="pro.title"></input>
+					</td>
+					<td>
+							<input class="form-control" ng-model="pro.description"></input>
+					</td>
+				<td><button class="btn btn-primary" ng-click="updateProject()">Update Project</button></td>
+
+			</tr>
+	</tbody>
+</table>
+</div>
+
 </div>

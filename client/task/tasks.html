@@ -41,17 +41,44 @@
     </div>
  </td>
  </tr>
- <tr ng-show = "commentId==task._id">
-  <td><div class="form-group">
+  <tr ng-show ="commentId==task._id">
+  <td colspan="4"><div class="form-group">
   <label for="comment">Comment:</label>
-  <textarea class="form-control" rows="2" id="comment"></textarea>
+  <textarea class="form-control" ng-model="commentAdd.text" rows="3" cols="80" id="comment"></textarea><br/>
+  <button type="button" class="btn btn-primary" ng-click="addComment(task._id)">Add comment</button>
+  <br/><br/>
+  <ul ng-repeat="comments in Comments">
+  <li><div style="width:500px;max-width:500px;display:inline-block;background-color:lightgray;"><p>{{comments.text}}</p></div><p class="text-right">
+  <i style="color:gray">by:{{comments.signedBy}}</i></p>
+  <div>
+  <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)">Delete</button> 
+  </div>
+  </li>
+  </ul>
   </td>
-  <td><button type="button" class="btn btn-primary" ng-click="addComment(task._id)">Add comment</button></td>
-</div>
+<!--   <td>
+  <ul ng-repeat="comments in Comments">
+  <li><div style="width:500px;max-width:500px;display:inline-block;background-color:lightgray;"><p>{{comments.text}}</p></div><p class="text-right">
+  <i style="color:gray">by:{{comments.signedBy}}</i></p>
+  <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)">Delete</button>
+  </li>
+  </ul>
+  </td>
+ --></div>
  </tr>
- <td ng-repeat="comment in task.comments"></td>
 </tbody>
- </table>
+ </table> 
+
+<!-- 
+<div ng-show="commentId==task._id">
+<div class="form-group">
+  <label for="comment">Comment:</label>
+  <textarea class="form-control" ng-model="commentAdd.text" rows="2" id="comment"></textarea>
+  <button type="button" class="btn btn-primary" ng-click="addComment(task._id)">Add comment</button>
+  <ul ng-repeat="comments in Comments">
+  <li><p class="text-left">{{comments.text}}</p><p class="text-right"><i style="color:gray">by:{{comments.signedBy}}</i></p><button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)">Delete</button></li>
+</div>
+ -->
 
  <hr/>
 
@@ -123,7 +150,7 @@
 
 </div>
 
-<!--  
+<!--
 <div class="form-group" ng-show="commentValue">
   <label for="comment">Comment:</label>
   <textarea class="form-control" rows="3" id="comment"></textarea>

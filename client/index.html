@@ -3,6 +3,9 @@
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/angular-resource/angular-resource.js"></script>
 <script src="../bower_components/angular-route/angular-route.js"></script>
+<script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="../bower_components/ngstorage/ngStorage.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
 <script src="../bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="task/taskResource.js"></script>
 <script src="task/task.js"></script>
@@ -11,9 +14,11 @@
 <script src="project/project.js"></script>
 <script src="project/projectResource.js"></script>
 <script src="comment/comment.js"></script>
+<script src="utils/authentication.js"></script>
 <script src="comment/commentResource.js"></script>
 <script src="index.js"></script>
-
+<script src="signup/signup.js"></script>
+<script src="login/login.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -71,6 +76,32 @@ body {
     margin: 0;
 }
 
+ul.nvb {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    font-size: 18px;
+}
+
+li {
+    float: left;
+}
+
+.nvb li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 18px 16px;
+    text-decoration: none;
+}
+
+.nvb li a:hover {
+    background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+}
+
+
 #grad1 {
     height: 250px;
     width:100%;
@@ -79,7 +110,7 @@ body {
     opacity:0.95;
 }
 
-.nvb {
+/*.nvb ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -88,43 +119,61 @@ body {
     color:white;
 	position: fixed;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
+}
+
+.nvb li {
+    float: left;
 }
 
 .nvb li a {
     display: block;
     color: white;
 	font-size: 24px;
-    padding: 8px 0 8px 16px;
+    padding: 14px 16px;
     text-decoration: none;
 }
+.nvb li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}*/
 
 hr {
     display: block;
     height: 1px;
     border: 10px;
     border-top: 0px solid #ccc;
-    margin: 1em 0;
+    margin: 0;
     padding: 20;
     background: #ccc;
     color: #ccc;
 }
 
-.nvb li a:hover:not(.active) {
-    background-color: #555;
-    color: white;
+li.topright {
+    position: absolute;
+    top: 0px;
+    right: 16px;
+    font-size: 18px;
 }
+
+.topright li a:hover {
+    background-color: #111;
+}
+
+
 </style>
 </head>
+
 <body ng-app="myApp">
-<ul class="nvb">
-  <li><a ng-href="#/home" href="#/home">Dashboard</a></li>
-  <li><a ng-href="#/projects" href="#/projects">Projects</a></li>
-  <li><a ng-href="#/tasks" href="#/tasks">Tasks</a></li>
-  <li><a ng-href="#/account" href="#/account">Account</a></li>
-  <li><a ng-href="#/about" href="#/about">About</a></li>
-</ul>
-<div ng-view style="margin-left:20%;padding:1px 16px;height:1000px;"> 
+  <ul class="nvb" ng-if="isLoggedIn()">
+    <li><a ui-sref="home">Dashboard</a></li>
+    <li><a ui-sref="projects" >Projects</a></li>
+    <li><a ui-sref="account" >Account</a></li>
+    <li><a ui-sref="about">About</a></li>
+    <li class="topright"><a ng-if="isLoggedIn()" ng-click="logout()">Log out</a></li>
+  </ul>
+  	<a ng-if="!isLoggedIn() && getCurrentState()!=='login'" ui-sref="login"></a>
+  <div ui-view style="margin-left:5%;padding:1px 16px;height:1000px;">
 </div>
 </body>
 </html>

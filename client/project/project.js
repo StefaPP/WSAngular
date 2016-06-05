@@ -1,19 +1,29 @@
 (function(angular) {
 
-	angular.module('project',['projectResource','ngRoute'])
-		.controller('projectCtrl',function($scope,Project,User,$location) {
+	angular.module('project',['projectResource','ngRoute','commentResource'])
+		.controller('projectCtrl',function($scope,Project,User,$location,Comment) {
 				$scope.location = $location;
 				var loadProject = function() {
 					$scope.Project = Project.query();
 					$scope.project = new Project();
 					$scope.User = User.query();
 					$scope.user = new User();
+					$scope.projectUpd = new Project();
+
 				}
 
 				$scope.value = false;
 				$scope.show = function(id) {
 				$scope.value = $scope.value ? false : true;
-					
+				}
+
+				$scope.valueForUpdate = false;
+				$scope.updateProjectShow = function(id){
+
+				$scope.projectUpd =  Project.get({_id : id});
+			  	console.log($scope.projectUpd.title);
+
+				$scope.valueForUpdate = $scope.valueForUpdate ? false : true;
 				}
 
 				$scope.go = function() {
@@ -24,26 +34,29 @@
 
 				$scope.addProject = function() {
 					Project.save($scope.project);
+
 					loadProject();
 				};
+
+				$scope.updateProject = function(id) {
+				}
 
 
 				$scope.details = function(project) {
 					$location.path('/project/'+project._id);
 				}
 
-		}).controller('projectDetailsCtrl',function($scope,Task,User,$routeParams,Project,Comment){
-			
-			
+		}).controller('projectDetailsCtrl',function($scope,Task,User,$stateParams,Project,Comment,$rootScope){
+
+
 			var projectDetails = function (){
-			var proj_id = $routeParams.id;
-	
+			var proj_id = $stateParams.id;
+			$scope.commentAdd = new Comment();
+		//	$scope.Comments = new Comment();
 			$scope.task = new Task();
 			$scope.user = new User();
 			$scope.project = Project.get({ _id : proj_id});
 			$scope.User = User.query();
-			$scope.comment = new Comment();
-			$scope.Comments = new Comment();
 
 			}
 
@@ -55,28 +68,48 @@
 			$scope.value = $scope.value ? false : true;
 
 		}
-			
+
 		    $scope.value2 = false;
 			$scope.show2 = function() {
 			$scope.value2 = $scope.value2 ? false : true;
-				
+
 		}
-			
+
 			$scope.commentId = null;
 			$scope.comment = function(id) {
 			$scope.commentId = $scope.id ? null : id;
-			$scope.Comments = Comment.query({id : id });
-			console.log(id);
-			}	
+			$scope.Comments = Comment.query({ id : id });
 
-		    $scope.addComment = function(id) {
-		    $scope.comment = new Comment();
-			$scope.comment.$save({ id : id},projectDetails);
-	 	}
+		}
 
+		  $scope.addComment = function(id) {
+		  		$scope.commentAdd.signedBy = $rootScope.getCurrentUser().username;
+				$scope.commentAdd.$save({ id : id},
+                   function(data) {
+                      // success
+					$scope.Comments = Comment.query({ id : id })
+					projectDetails();
+					//	projectDetails();
+                   }, function(e) {
+                      // failure
+                   });
+			//	$scope.Comments = Comment.query({ id : id })
+			//	projectDetails();
+		}
+			$scope.deleteComment = function(id,taskId){
+			        Comment.delete({ id : id},
+                    function(data) {
+                       // success
+					$scope.Comments = Comment.query({ id : taskId })
+					projectDetails();
+					//	projectDetails();
+                    }, function(e) {
+                       // failure
+                    });
+			}
 
 			$scope.addTask = function(id) {
-			$scope.task.$save({ projectId : id},projectDetails); 
+			$scope.task.$save({ projectId : id},projectDetails);
 			$scope.task = new Task();
 	  }
 
@@ -87,9 +120,9 @@
 
 		  	$scope.addUserToProject = function(projectId,userId) {
 		  	$scope.user.$save({ id : projectId , userId : userId},projectDetails);
-		  	
+
 		  	}
-	
+
 		}).controller('DropdownCtrl', function ($scope, $log) {
 			  $scope.items = [
 			    'The first choice!',

@@ -1,0 +1,22 @@
+<div style="margin-left:25%;padding:1px 16px;margin-top:15%;">
+	<form ng-submit="login()">
+		<table class="table">
+		 <hgroup>
+			<h1>Login</h1>
+			<tr>
+				<td>Username:</td>
+				<td><input type="text" ng-model="user.username"/></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><input type="text" ng-model="user.password"/></td>
+			</tr>
+			<tr>
+				<td colspan="10" align="center"><input type="submit" value="Log in" class="btn btn-default dropdown-toggle"/></td>
+			</tr>
+			<tr>
+				<td colspan="10" align="center"><input type="button" value="Sing up" ui-sref="signup" class="btn btn-default dropdown-toggle"/></td>
+			</tr>
+		</table>
+	</form>
+</div>

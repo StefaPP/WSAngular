@@ -2,24 +2,97 @@ var express  = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var bodyP = require('body-parser');
-
+var passport= require('passport');
+var jwt = require('jwt-simple');
 var Task = require(__dirname + "/app/model/task");
 var User = require(__dirname + "/app/model/user");
 var Project = require(__dirname + "/app/model/project");
 var Comment = require(__dirname + "/app/model/comment");
-mongoose.connect('mongodb://localhost:27017/xws');
+var config = require(__dirname+'/config/database');
+
+require(__dirname + '/config/passport')(passport);
+
+mongoose.connect(config.database);
 
 app.use(express.static(__dirname + "/client"));
 app.use(bodyP.json());
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
+app.use('/node_modules',express.static(__dirname + '/node_modules'));
 
+var loginRouter = express.Router(); // koristimo express Router
+// kreira novi user account (POST http://localhost:8080/api/signup)
+loginRouter.post('/signup', function(req, res) {
+ 
+
+    var newUser = new User({
+        username : req.body.username,
+        password : req.body.password
+    })
+
+    // save the user
+    console.log(req.body.username + " " + req.body.password)
+
+    newUser.save(function(err) {
+      if (err) throw(err)
+      else  res.json({success: true, msg: 'Successful created new user.'});
+    });
+  
+})
+.post('/authenticate', function(req, res) {
+  console.log('from /authenticate' + " " + req.body.username + " " + req.body.password);
+  User.findOne({
+    username: req.body.username
+  }, function(err, user) {
+    if (err) throw err;
+
+    if (!user) {
+      console.log('nije nasao')
+      res.send({success: false, msg: 'Authentication failed. User not found.'});
+    } else {
+      console.log('provera da li se pasword poklapa')
+      // proveri da li se password poklapa
+      user.comparePassword(req.body.password, function (err, isMatch) {
+        if (isMatch && !err) {
+          console.log('poklapa se')
+          // ako je pronadjen user i poklapa se password kreira token
+          // da li ceo user treba da bude u tokenu?
+          var token = jwt.encode(user, config.secret);
+          // vraca informaciju kao JWT token
+          var resObject = { success: true, token: 'JWT ' + token };
+          res.json(resObject);
+        } else {
+          res.send({success: false, msg: 'Authentication failed. Wrong password.'});
+        }
+      });
+    }
+  });
+})
+.get('/memberinfo', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    var decoded = jwt.decode(token, config.secret);
+    User.findOne({
+      name: decoded.name
+    }, function(err, user) {
+      if (err) throw err;
+
+      if (!user) {
+        return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+      } else {
+        res.json({success: true, msg: 'Welcome in the member area ' + user.name + '!'});
+      }
+    });
+  } else {
+    return res.status(403).send({success: false, msg: 'No token provided.'});
+  }
+});
 
 var taskRouter = express.Router();
 taskRouter
 .get('/:id',function (req,res,next){
   Project.findOne({ "_id" : req.params.id }, function(err,project){
       if(err) console.log(err);
-	  
+
         Task.find({ "_id" : { $in: project.tasks }})
         .populate('comments')
         .exec(function(err, project) {
@@ -73,10 +146,8 @@ userRouter
 .post('/project/:id/user',function(req,res) {
 	console.log('USSSSOOOOO');
 	Project.findOne({"_id" : req.params.id},function(err,project) {
-		console.log(project + '   NAAAAAAAAAAAAAAAAAAAAASAOOOO GA');
 		if(err) throw(err);
 	User.findOne({"_userId": req.params.userId},function(err,user) {
-		console.log(user + "USEEEEEEEEEEEEEEEEEEER")
 		if(err) throw(err);
 		console.log(project._id + "\n" + user._id);
 	Project.findByIdAndUpdate(project._id,{$push:{"users":user._id}},function(err, entry) {
@@ -87,14 +158,14 @@ userRouter
 		})
 	});
 });
-	
+
 var projectRouter = express.Router();
-	
+
 projectRouter
 	.get('/',function(req,res) {
 		Project.find(function(err,docs) {
 			if(err) console.error(err);
-			
+
 			res.json(docs);
 		});
 })
@@ -115,7 +186,7 @@ projectRouter
 		title : req.body.title,
 		description : req.body.description
 	})
- 
+
    projektic.save(function(err,resp) {
         if(err) {
             console.log(err);
@@ -126,18 +197,22 @@ projectRouter
             res.send({
                 message:'the appointment has bees saved'
             });
-        }           
+        }
 })
 
 });
-
 var commentRouter = express.Router();
 
 commentRouter
 .post('/:id',function(req, res, next) {
-  console.log('commentRouter ' +  req.params.id )
-  var comment = new Comment(req.body);
-  console.log(comment);
+
+  var comment = new Comment({
+  		signedBy : req.body.signedBy,
+      text : req.body.text
+  });
+
+  console.log(req.body.signedBy + " POTPISO");
+
   Task.findOne({"_id":req.params.id},function (err, entry) {
     console.log(entry + "  JESI LI NULL??");
     if(err) next(err);
@@ -159,6 +234,7 @@ commentRouter
 })
 .get('/:id',function (req,res,next){
   Task.findOne({ '_id' : req.params.id }, function(err,entry){
+     console.log(req.params.id);
       if(err) next (err);
         Comment.find({ '_id' : { $in:entry.comments}},function(err, docs){
           console.log(docs);
@@ -172,6 +248,6 @@ app.use('/tasks/', taskRouter);
 app.use('/user/',userRouter);
 app.use('/projects/',projectRouter);
 app.use('/comments/',commentRouter);
-
+app.use('/api/users',loginRouter)
 app.listen(3000);
 console.log("Server running on port 3000");
