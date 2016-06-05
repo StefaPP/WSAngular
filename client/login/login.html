@@ -1,22 +1,24 @@
-<div style="margin-left:25%;padding:1px 16px;margin-top:15%;">
+ <div class="jumbotron">
+        <div class="container">
+            <div class="col-sm-8 col-sm-offset-2">
+				<div>
+<div>
 	<form ng-submit="login()">
-		<table class="table">
-		 <hgroup>
-			<h1>Login</h1>
-			<tr>
-				<td>Username:</td>
-				<td><input type="text" ng-model="user.username"/></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type="text" ng-model="user.password"/></td>
-			</tr>
-			<tr>
-				<td colspan="10" align="center"><input type="submit" value="Log in" class="btn btn-default dropdown-toggle"/></td>
-			</tr>
-			<tr>
-				<td colspan="10" align="center"><input type="button" value="Sing up" ui-sref="signup" class="btn btn-default dropdown-toggle"/></td>
-			</tr>
-		</table>
+		<h1> Login </h1>
+		<div class="form-group">
+		    <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="form-control" ng-model="user.username" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="form-control" ng-model="user.password" required />
+           </div>
+        <div class="form-actions">
+        <input type="submit" value="Log in" class="btn btn-default dropdown-toggle"/>&nbsp;&nbsp;&nbsp;
+        <input type="button" value="Sign up" ui-sref="signup" class="btn btn-default dropdown-toggle"/>
+
+        </div>
+		</div>
 	</form>
 </div>
+</div></div></div>
