@@ -1,6 +1,4 @@
 <div>
-
-
 <div class="panel panel-info">
   <div class="panel-heading">
     <h3 class="panel-title">Project details</h3>
@@ -14,7 +12,9 @@
   </button>
  <button class="btn btn-primary" ng-click="show2()">Show users of this project
   </button>
+  <br/><br/>
   <div ng-show = "value">
+ <h3>Tasks</h3>
  <table class="table">
  <th>Title</th>
  <th>Description</th>
@@ -42,47 +42,29 @@
  </td>
  </tr>
   <tr ng-show ="commentId==task._id">
-  <td colspan="4"><div class="form-group">
+  <td colspan="3"><div class="form-group">
   <label for="comment">Comment:</label>
   <textarea class="form-control" ng-model="commentAdd.text" rows="3" cols="80" id="comment"></textarea><br/>
-  <button type="button" class="btn btn-primary" ng-click="addComment(task._id)">Add comment</button>
+  <button type="button" class="btn btn-primary" ng-click="addComment(task._id)" ng-disabled="!commentAdd.text">Add comment</button>
   <br/><br/>
   <ul ng-repeat="comments in Comments">
   <li><div style="width:500px;max-width:500px;display:inline-block;background-color:lightgray;"><p>{{comments.text}}</p></div><p class="text-right">
   <i style="color:gray">by:{{comments.signedBy}}</i></p>
   <div>
-  <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)">Delete</button> 
+  <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)"
+   ng-disabled="comments.signedBy !== currentUser">Delete</button> 
   </div>
   </li>
   </ul>
   </td>
-<!--   <td>
-  <ul ng-repeat="comments in Comments">
-  <li><div style="width:500px;max-width:500px;display:inline-block;background-color:lightgray;"><p>{{comments.text}}</p></div><p class="text-right">
-  <i style="color:gray">by:{{comments.signedBy}}</i></p>
-  <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)">Delete</button>
-  </li>
-  </ul>
-  </td>
- --></div>
- </tr>
+</div>
+</tr>
 </tbody>
  </table> 
+ <br/><br/>
 
-<!-- 
-<div ng-show="commentId==task._id">
-<div class="form-group">
-  <label for="comment">Comment:</label>
-  <textarea class="form-control" ng-model="commentAdd.text" rows="2" id="comment"></textarea>
-  <button type="button" class="btn btn-primary" ng-click="addComment(task._id)">Add comment</button>
-  <ul ng-repeat="comments in Comments">
-  <li><p class="text-left">{{comments.text}}</p><p class="text-right"><i style="color:gray">by:{{comments.signedBy}}</i></p><button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)">Delete</button></li>
-</div>
- -->
-
- <hr/>
-
-<h1> Adding new task <h1>
+<div class="jumbotron">
+<h1> Adding new task </h1>
 <table class="table">
     <thead>
         <tr>
@@ -126,11 +108,12 @@
     </tbody>
 </table>
  </div>
+ </div>
 
-<div ng-show="value2"><table class="table">
+<div ng-show="value2">
+<h3>Users</h3>
+<table class="table">  
    <th>Username</th>
-   <th>&nbsp;</th>
-   <th>Role</th>
    <th>&nbsp;</th>
    <tr ng-repeat="user in project.users">
    <td>{{user.username}}</td>
@@ -140,20 +123,16 @@
  </table>
  <hr/>
 
-
+<div class="jumbotron">
 <h1>Add users to this project</h1>
- <select class="form-group" ng-model="user.id" ng-options='user.id as user.username for user in User' ng-change="update()">
+ <select class="form-control" ng-model="user.id" ng-options='user.id as user.username for user in User' ng-change="update()">
   <option value="">Select user</option>
  </select>
+
+ <br/>
+ 
  <button class="btn btn-primary" ng-click="addUserToProject(project._id,user._id)">Add</button>
   </div>
 
 </div>
-
-<!--
-<div class="form-group" ng-show="commentValue">
-  <label for="comment">Comment:</label>
-  <textarea class="form-control" rows="3" id="comment"></textarea>
 </div>
-
- -->

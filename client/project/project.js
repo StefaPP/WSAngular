@@ -6,8 +6,10 @@
 				var loadProject = function() {
 					$scope.Project = Project.query();
 					$scope.project = new Project();
+					
 					$scope.User = User.query();
 					$scope.user = new User();
+					
 					$scope.projectUpd = new Project();
 
 				}
@@ -57,6 +59,7 @@
 			$scope.user = new User();
 			$scope.project = Project.get({ _id : proj_id});
 			$scope.User = User.query();
+			$scope.currentUser = $rootScope.getCurrentUser().username;
 
 			}
 
