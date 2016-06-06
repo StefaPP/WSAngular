@@ -52,7 +52,7 @@
   <i style="color:gray">by:{{comments.signedBy}}</i></p>
   <div>
   <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)"
-   ng-disabled="comments.signedBy !== currentUser">Delete</button> 
+   ng-if="comments.signedBy === currentUser">Delete</button> 
   </div>
   </li>
   </ul>

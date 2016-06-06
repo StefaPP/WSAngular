@@ -14,6 +14,7 @@
 
         function login(username, password, callback) {
           console.log(username + " " + password) ;
+          
             $http.post('/api/users/authenticate', { username: username, password: password })
                 .success(function (response) {
                     // ukoliko postoji token, prijava je uspecna
@@ -22,7 +23,10 @@
                         var currentUser = { username: username, token: response.token }
                         var tokenPayload = jwtHelper.decodeToken(response.token);
                         if(tokenPayload.role){
+                            console.log('tokenPayload.role ' + tokenPayload.role);
                             currentUser.role = tokenPayload.role;
+                        }else{
+                            console.log('tokenPayload.role ' + tokenPayload.role);
                         }
                         // prijavljenog korisnika cuva u lokalnom skladistu
                         $localStorage.currentUser = currentUser;
@@ -48,5 +52,6 @@
         function getCurrentUser() {
             return $localStorage.currentUser;
         }
+       
     }
 })();

@@ -21,9 +21,10 @@
 
 				$scope.valueForUpdate = false;
 				$scope.updateProjectShow = function(id){
-
-				$scope.projectUpd =  Project.get({_id : id});
-			  	console.log($scope.projectUpd.title);
+				console.log(id + ' updateProjectShow');
+				$scope.projectUpd =  Project.get({ _id : id});
+				$scope.projectUpd._id = id;
+			  	
 
 				$scope.valueForUpdate = $scope.valueForUpdate ? false : true;
 				}
@@ -35,13 +36,14 @@
 				loadProject();
 
 				$scope.addProject = function() {
-					Project.save($scope.project);
-
-					loadProject();
+					Project.save($scope.project,loadProject);
 				};
 
 				$scope.updateProject = function(id) {
+					console.log($scope.projectUpd.title + " " + $scope.projectUpd.description +  " updateProject")
+					Project.save($scope.projectUpd,loadProject);
 				}
+
 
 
 				$scope.details = function(project) {
@@ -60,7 +62,8 @@
 			$scope.project = Project.get({ _id : proj_id});
 			$scope.User = User.query();
 			$scope.currentUser = $rootScope.getCurrentUser().username;
-
+            $scope.currentUser.role = $rootScope.getCurrentUserRole();
+            console.log($rootScope.getCurrentUserRole());
 			}
 
 			projectDetails();
@@ -86,6 +89,7 @@
 		}
 
 		  $scope.addComment = function(id) {
+
 		  		$scope.commentAdd.signedBy = $rootScope.getCurrentUser().username;
 				$scope.commentAdd.$save({ id : id},
                    function(data) {

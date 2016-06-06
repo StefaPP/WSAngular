@@ -22,15 +22,24 @@ app.use('/node_modules',express.static(__dirname + '/node_modules'));
 var loginRouter = express.Router(); // koristimo express Router
 // kreira novi user account (POST http://localhost:8080/api/signup)
 loginRouter.post('/signup', function(req, res) {
- 
+    
+    if(req.body.username === 'pop' && req.body.password === 'car'){
 
-    var newUser = new User({
+      var newUser = new User({
         username : req.body.username,
-        password : req.body.password
-    })
+        password : req.body.password,
+        role : 'admin'  
+        
+      })
+    }else{
+          var newUser = new User({
+          username : req.body.username,
+          password : req.body.password,
+          role : 'user'
+      })
+    }
 
-    // save the user
-    console.log(req.body.username + " " + req.body.password)
+   
 
     newUser.save(function(err) {
       if (err) throw(err)
@@ -53,7 +62,6 @@ loginRouter.post('/signup', function(req, res) {
       // proveri da li se password poklapa
       user.comparePassword(req.body.password, function (err, isMatch) {
         if (isMatch && !err) {
-          console.log('poklapa se')
           // ako je pronadjen user i poklapa se password kreira token
           // da li ceo user treba da bude u tokenu?
           var token = jwt.encode(user, config.secret);
@@ -180,15 +188,16 @@ projectRouter
     });
 })
 .post('/',function(req,res) {
-
+  console.log(req.body.sign + " " + req.body.title)
 	var projektic = new Project ({
 		sign : req.body.sign,
 		title : req.body.title,
 		description : req.body.description
 	})
 
-   projektic.save(function(err,resp) {
+  projektic.save(function(err,resp) {
         if(err) {
+            
             console.log(err);
             res.send({
                 message :'something went wrong'
@@ -198,9 +207,51 @@ projectRouter
                 message:'the appointment has bees saved'
             });
         }
+  })
 })
-
+.post('/:id', function(req,res){
+  console.log(req.body.sign + " " + req.body.title)
+  Project.findOneAndUpdate({ _id :req.params.id }, { $set: { sign : req.body.sign , title : req.body.title,description :req.body.description }}, { new: true }, function(err, doc) {
+     if(err) {
+            
+            console.log(err);
+            res.send({
+                message :'something went wrong'
+            });
+        } else {
+            res.send({
+                message:'the appointment has bees saved'
+            });
+        }
 });
+})
+.put('/:id', function(req, res, next) {
+   
+    Project.findOne({
+      "_id": req.params.id
+    }, function(err, project) {
+      if (err) throw(err);
+      /*var newProject = req.body;
+      console.log(newProject + " <--------------");
+*/
+      
+     var newProject = new Project({
+       sign : req.body.sign,
+       title : req.body.title,
+       description : req.body.description
+     });       
+
+     console.log(newProject + " <--------------------");
+
+     
+     project.save(function(err, project) {
+     if (err) throw(err);
+      res.json(project);
+      });
+    })
+})    
+
+
 var commentRouter = express.Router();
 
 commentRouter
@@ -226,6 +277,7 @@ commentRouter
   });
 })
 .delete('/:id', function (req, res, next) {
+
   Comment.remove({"_id":req.params.id},function (err, successIndicator) {
     if(err) next(err);
     res.json(successIndicator);
