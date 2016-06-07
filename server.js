@@ -134,43 +134,49 @@ taskRouter
     });
   });
 })
-.delete('/:id',function(req,res,next) {
-		Task.remove({
-			"_id" : req.params.id
-		},function(err, successIndicator) {
-		    if (err) throw(err);
-		    res.json(successIndicator);
-		  });
+.delete('/:_id/project/:projectId',function(req,res,next) {
+  console.log(req.params.projectId + "<------- ProjectID \n" + req.params._id + "<---- TaskID")
+	Project.findByIdAndUpdate(req.params.projectId,{$pull:{"tasks" : req.params._id}},function(err,project) {
+    if(err) throw(err);
+    res.json(project);
+   })
 });
 
 var userRouter = express.Router();
 userRouter
-	.get('/',function(req,res) {
+.get('/',function(req,res) {
 		User.find(function(err,docs) {
 			if(err) console.error(err);
 			res.json(docs);
 		});
 })
-.post('/project/:id/user',function(req,res) {
-	console.log('USSSSOOOOO');
+.post('/project/:id/user/:userId',function(req,res) {
 	Project.findOne({"_id" : req.params.id},function(err,project) {
 		if(err) throw(err);
-	User.findOne({"_userId": req.params.userId},function(err,user) {
+	User.findOne({"_id": req.params.userId},function(err,user) {
 		if(err) throw(err);
-		console.log(project._id + "\n" + user._id);
+		
 	Project.findByIdAndUpdate(project._id,{$push:{"users":user._id}},function(err, entry) {
         if(err) throw(err);
         res.json(entry);
 
 			});
 		})
-	});
+	})  
+})
+.delete('/:id/project/:projectId',function(req,res){ 
+  console.log(req.params.projectId + " <----- \n" + req.params.id + " <---------")
+
+  Project.findByIdAndUpdate(req.params.projectId,{$pull:{"users" : req.params.id}},function(err,project) {
+    if(err) throw(err);
+    res.json(project);
+   })
 });
+
 
 var projectRouter = express.Router();
 
-projectRouter
-	.get('/',function(req,res) {
+projectRouter.get('/',function(req,res) {
 		Project.find(function(err,docs) {
 			if(err) console.error(err);
 
@@ -188,7 +194,7 @@ projectRouter
     });
 })
 .post('/',function(req,res) {
-  console.log(req.body.sign + " " + req.body.title)
+
 	var projektic = new Project ({
 		sign : req.body.sign,
 		title : req.body.title,
@@ -209,9 +215,8 @@ projectRouter
         }
   })
 })
-.post('/:id', function(req,res){
-  console.log(req.body.sign + " " + req.body.title)
-  Project.findOneAndUpdate({ _id :req.params.id }, { $set: { sign : req.body.sign , title : req.body.title,description :req.body.description }}, { new: true }, function(err, doc) {
+.put('/:_id', function(req,res){
+  Project.findOneAndUpdate({ _id :req.params._id }, { $set: { sign : req.body.sign , title : req.body.title,description :req.body.description }}, { new: true }, function(err, doc) {
      if(err) {
             
             console.log(err);
@@ -224,7 +229,11 @@ projectRouter
             });
         }
 });
-})
+});
+
+
+
+/*
 .put('/:id', function(req, res, next) {
    
     Project.findOne({
@@ -233,15 +242,13 @@ projectRouter
       if (err) throw(err);
       /*var newProject = req.body;
       console.log(newProject + " <--------------");
-*/
+
       
      var newProject = new Project({
        sign : req.body.sign,
        title : req.body.title,
        description : req.body.description
      });       
-
-     console.log(newProject + " <--------------------");
 
      
      project.save(function(err, project) {
@@ -250,7 +257,7 @@ projectRouter
       });
     })
 })    
-
+*/
 
 var commentRouter = express.Router();
 
@@ -262,10 +269,8 @@ commentRouter
       text : req.body.text
   });
 
-  console.log(req.body.signedBy + " POTPISO");
-
   Task.findOne({"_id":req.params.id},function (err, entry) {
-    console.log(entry + "  JESI LI NULL??");
+
     if(err) next(err);
     comment.save(function (err, comment) {
       if(err) next(err);
@@ -276,20 +281,17 @@ commentRouter
     });
   });
 })
-.delete('/:id', function (req, res, next) {
-
-  Comment.remove({"_id":req.params.id},function (err, successIndicator) {
-    if(err) next(err);
-    res.json(successIndicator);
-  })
-
-})
+.delete('/:id/task/:taskId',function(req,res) {
+   Task.findByIdAndUpdate(req.params.taskId,{$pull:{"comments" : req.params.id}},function(err,task) {
+    if(err) throw(err);
+    res.json(task);
+   })
+ 
+   })
 .get('/:id',function (req,res,next){
   Task.findOne({ '_id' : req.params.id }, function(err,entry){
-     console.log(req.params.id);
       if(err) next (err);
         Comment.find({ '_id' : { $in:entry.comments}},function(err, docs){
-          console.log(docs);
           res.json(docs);
         })
     })

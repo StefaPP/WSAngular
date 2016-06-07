@@ -35,7 +35,7 @@
      <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-        <li role="menuitem"><button class="btn btn-default" ng-click="deleteTask(task)">Delete task</button></li>
+        <li role="menuitem"><button class="btn btn-default" ng-click="deleteTask(task,project)">Delete task</button></li>
         <li role="menuitem"><button class="btn btn-default" ng-click="comment(task._id)">Comment</button></li>
       </ul>
     </div>
@@ -53,6 +53,10 @@
   <div>
   <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)"
    ng-if="comments.signedBy === currentUser">Delete</button> 
+
+  <button type="button" class="btn btn-danger" ng-click="updateComment(comments._id,task._id)"
+   ng-if="comments.signedBy === currentUser">Update</button> 
+   
   </div>
   </li>
   </ul>
@@ -119,19 +123,27 @@
    <td>{{user.username}}</td>
     <td>&nbsp;</td>
    <td>{{user.role}}</td>
+    <td>&nbsp;</td>
+   <td><button class="btn btn-danger" ng-click="deleteUserFromProject(user._id,project._id)">Remove</button></td>
    </tr>
+
  </table>
  <hr/>
 
-<div class="jumbotron">
-<h1>Add users to this project</h1>
- <select class="form-control" ng-model="user.id" ng-options='user.id as user.username for user in User' ng-change="update()">
-  <option value="">Select user</option>
- </select>
 
  <br/>
- 
- <button class="btn btn-primary" ng-click="addUserToProject(project._id,user._id)">Add</button>
+ <div class="jumbotron">
+  <form name="myForm">
+    <label for="repeatSelect"> Repeat select: </label>
+    <select name="repeatSelect" id="repeatSelect" ng-model="user.repeatSelect">
+      <option ng-repeat="user in User" value="{{user._id}}">{{user.username}}</option>
+    </select>
+  </form>
+  <hr>
+  <tt>repeatSelect = {{user.repeatSelect}}</tt><br/>
+   <button class="btn btn-primary" ng-click="addUserToProject(project._id,user.repeatSelect)">Add</button>
+</div>
+
   </div>
 
 </div>

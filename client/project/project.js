@@ -1,6 +1,6 @@
 (function(angular) {
 
-	angular.module('project',['projectResource','ngRoute','commentResource'])
+	angular.module('project',['projectResource','ngRoute','commentResource','userResource',])
 		.controller('projectCtrl',function($scope,Project,User,$location,Comment) {
 				$scope.location = $location;
 				var loadProject = function() {
@@ -41,10 +41,8 @@
 
 				$scope.updateProject = function(id) {
 					console.log($scope.projectUpd.title + " " + $scope.projectUpd.description +  " updateProject")
-					Project.save($scope.projectUpd,loadProject);
+					Project.update($scope.projectUpd,loadProject);
 				}
-
-
 
 				$scope.details = function(project) {
 					$location.path('/project/'+project._id);
@@ -104,7 +102,7 @@
 			//	projectDetails();
 		}
 			$scope.deleteComment = function(id,taskId){
-			        Comment.delete({ id : id},
+			        Comment.delete({ id : id , taskId : taskId},
                     function(data) {
                        // success
 					$scope.Comments = Comment.query({ id : taskId })
@@ -115,18 +113,30 @@
                     });
 			}
 
+			$scope.updateComment = function(commentId,taskId) {
+				
+			}
+
 			$scope.addTask = function(id) {
 			$scope.task.$save({ projectId : id},projectDetails);
 			$scope.task = new Task();
 	  }
 
-
-		    $scope.deleteTask  = function(task) {
-		  	Task.delete({ _id : task._id},projectDetails);
+		    $scope.deleteTask  = function(task,project) {
+		   	console.log(project._id + " <++++++++++++++++");
+		  	Task.deleteTask({ _id : task._id , projectId : project._id},projectDetails);
 		  }
 
 		  	$scope.addUserToProject = function(projectId,userId) {
+		  	console.log('pro ' + projectId + ' userId ' + userId )
 		  	$scope.user.$save({ id : projectId , userId : userId},projectDetails);
+		 
+		  	}
+
+		  	$scope.deleteUserFromProject = function(userId,projectId) 			
+		  	{
+			console.log(userId + "<-------------" + "-------->" + projectId);
+            User.deleteUser({ id : userId , projectId : projectId},projectDetails);
 
 		  	}
 
