@@ -1,15 +1,16 @@
 (function(angular) {
 
 	angular.module('project',['projectResource','ngRoute','commentResource','userResource',])
-		.controller('projectCtrl',function($scope,Project,User,$location,Comment) {
+		.controller('projectCtrl',function($scope,Project,User,Task,$location,Comment) {
 				$scope.location = $location;
 				var loadProject = function() {
 					$scope.Project = Project.query();
 					$scope.project = new Project();
 					
-					$scope.User = User.query();
-					$scope.user = new User();
 					
+					console.log($scope.User);
+					$scope.user = new User();
+					$scope.User = User.query();
 					$scope.projectUpd = new Project();
 
 				}
@@ -59,7 +60,7 @@
 			$scope.Comment = new Comment();
 			$scope.commentAdd = new Comment();
 			$scope.commentUpd =new Comment();
-	
+            $scope.Users = User.query();
 			$scope.task = new Task();
 			$scope.user = new User();
 			$scope.project = Project.get({ _id : proj_id});
@@ -142,9 +143,19 @@
 				}
 
 			$scope.addTask = function(id,userId) {
-			$scope.task.$save({ projectId : id , userId : userId},projectDetails);
+			console.log(userId);
+			
+			if(userId == null){
+				console.log("USOOO SAM ODJE")
+				$scope.task.$save({ projectId : id},projectDetails);
+			}
+			else{
+				console.log("ONDA NMG ODJE UCI")
+			$scope.task.$saveUser({ projectId : id , _id : userId},projectDetails);
+		
 			$scope.task = new Task();
-	  }
+	 	 }
+	}
 
 		    $scope.deleteTask  = function(task,project) {
 		  	Task.deleteTask({ _id : task._id , projectId : project._id},projectDetails);

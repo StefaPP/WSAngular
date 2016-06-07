@@ -33,15 +33,21 @@
  <td>{{task.status}}</td>
  <td>{{task.createdAt}}</td>
  <td><ul ng-repeat="user in task.users"><li>{{}}</li></ul>
-  <td><button class="btn btn-warning" ng-click="updateTaskShow(task._id)">Update task</button>
- <div class="btn-group" uib-dropdown is-open="status.isopen">
-      <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+  <td><!-- <button class="btn btn-warning" ng-click="updateTaskShow(task._id)">Edit task</button> -->
+  <div class="btn-group" uib-dropdown is-open="status.isopen">
+      <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">Action
      <span class="caret"></span>
       </button>
+    
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-        <li role="menuitem"><button class="btn btn-default" ng-click="deleteTask(task,project)">Delete task</button></li>
-        <li role="menuitem"><button class="btn btn-default" ng-click="comment(task._id)">Comment</button></li>
-      </ul>
+    <!-- <li role="menuitem"><button class="btn btn-default" ng-click="deleteTask(task,project)">Delete task</button></li>
+    <li role="menuitem"><button class="btn btn-default" ng-click="comment(task._id)">Comment</button></li>
+ 
+  	 -->
+   	 <li role="menuitem"><a  ng-click="comment(task._id)">Comment task</a>
+  	<li role="menuitem?"><a ng-click="updateTaskShow(task._id)">Edit task</a>
+  	<li role="menuitem"><a ng-click="deleteTask(task,project)">Delete task</a>
+  </ul>
     </div>
  </td>
  </tr>
@@ -182,6 +188,7 @@
  </div>
  </div>
 
+
 <div ng-show="value2">
 <h3>Users</h3>
 <table class="table">  
@@ -192,7 +199,6 @@
     <td>&nbsp;</td>
    <td>{{user.role}}</td>
     <td>&nbsp;</td>
-    <td>&nbsp;</td>
    <td><button class="btn btn-danger" ng-click="deleteUserFromProject(user._id,project._id)">Remove</button></td>
    </tr>
 
@@ -201,16 +207,16 @@
  <br/>
  <div class="jumbotron">
   <form name="myForm">
-    <label for="repeatSelect"> Choose users: </label>
+    <label for="repeatSelect"> Choose user: </label>
     <select name="repeatSelect" id="repeatSelect" ng-model="user.repeatSelect">
-      <option ng-repeat="user in User" value="{{user._id}}">{{user.username}}</option>
+      <option ng-repeat="user in Users" value="{{user._id}}">{{user.username}}</option>
     </select>
-  </form>
-  <hr/>
+  <br/>
    <button class="btn btn-primary" ng-click="addUserToProject(project._id,user.repeatSelect)">Add</button>
 </div>
-
+  </form>
   </div>
+
 
 </div>
 </div>

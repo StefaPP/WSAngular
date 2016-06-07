@@ -4,9 +4,8 @@ angular.module('userResource',['ngResource'])
 		var User = $resource('/user/:id',{id :'@id'},
 		
 		{
-     	save : {
-					method:'POST',
-					url : '/user/project/:projectid/user/:id'},
+     	save : {method:'POST',
+					url : '/user/project/:projectid/userId/:id'},
 		deleteUser : { 
 					method:'delete',
 					url:"/user/:id/project/:projectId"}
