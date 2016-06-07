@@ -24,9 +24,8 @@
 				console.log(id + ' updateProjectShow');
 				$scope.projectUpd =  Project.get({ _id : id});
 				$scope.projectUpd._id = id;
-			  	
-
 				$scope.valueForUpdate = $scope.valueForUpdate ? false : true;
+				
 				}
 
 				$scope.go = function() {
@@ -43,6 +42,9 @@
 					console.log($scope.projectUpd.title + " " + $scope.projectUpd.description +  " updateProject")
 					Project.update($scope.projectUpd,loadProject);
 				}
+				$scope.deleteProject = function(id){
+					Project.delete({ _id : id},loadProject);
+				}
 
 				$scope.details = function(project) {
 					$location.path('/project/'+project._id);
@@ -53,7 +55,9 @@
 
 			var projectDetails = function (){
 			var proj_id = $stateParams.id;
+			$scope.Comment = new Comment();
 			$scope.commentAdd = new Comment();
+			$scope.commentUpd =new Comment();
 		//	$scope.Comments = new Comment();
 			$scope.task = new Task();
 			$scope.user = new User();
@@ -102,7 +106,7 @@
 			//	projectDetails();
 		}
 			$scope.deleteComment = function(id,taskId){
-			        Comment.delete({ id : id , taskId : taskId},
+			        Comment.deleteComment({ id : id , taskId : taskId},
                     function(data) {
                        // success
 					$scope.Comments = Comment.query({ id : taskId })
@@ -113,9 +117,27 @@
                     });
 			}
 
-			$scope.updateComment = function(commentId,taskId) {
-				
-			}
+			$scope.valueForUpdateComment = false;
+			$scope.updateCommentShow = function(id){
+				$scope.commentUpd = Comment.commentGet({ id : id});
+				console.log(Comment.commentGet({ id : id}))
+				$scope.commentUpd._id = id;
+				$scope.valueForUpdateComment = $scope.valueForUpdateComment ? false : true;
+			}	
+
+			$scope.updateComment = function(taskId,id) {
+					$scope.valueForUpdateComment = false;
+					console.log('from updateComment ' + console.log($scope.commentUpd));
+					Comment.commentPost({id : id},$scope.commentUpd,
+                   function(data) {
+                      // success
+                    $scope.Comments = Comment.query({ id : taskId });
+					projectDetails();
+					//	projectDetails();
+                   }, function(e) {
+                      // failure
+                   });
+				}
 
 			$scope.addTask = function(id) {
 			$scope.task.$save({ projectId : id},projectDetails);
@@ -135,6 +157,7 @@
 
 		  	$scope.deleteUserFromProject = function(userId,projectId) 			
 		  	{
+
 			console.log(userId + "<-------------" + "-------->" + projectId);
             User.deleteUser({ id : userId , projectId : projectId},projectDetails);
 

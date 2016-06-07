@@ -20,7 +20,8 @@ var taskSchema = new Schema({
 		enum: ['To do','In progress','Verify','Done']
 	},
 	createdBy : String,
-	comments : [{ type:Schema.Types.ObjectId, ref : 'Comment'}]
+	comments : [{ type:Schema.Types.ObjectId, ref : 'Comment'}],
+	users :    [{ type:Schema.Types.ObjectId, ref : 'User'}]
 });
 
 taskSchema.pre('save',function(next){

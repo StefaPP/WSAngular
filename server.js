@@ -136,10 +136,13 @@ taskRouter
 })
 .delete('/:_id/project/:projectId',function(req,res,next) {
   console.log(req.params.projectId + "<------- ProjectID \n" + req.params._id + "<---- TaskID")
+  Task.remove({"_id" : req.params._id} , function(err,ress){
+    if(err) throw(err);
 	Project.findByIdAndUpdate(req.params.projectId,{$pull:{"tasks" : req.params._id}},function(err,project) {
     if(err) throw(err);
     res.json(project);
    })
+});
 });
 
 var userRouter = express.Router();
@@ -166,11 +169,10 @@ userRouter
 })
 .delete('/:id/project/:projectId',function(req,res){ 
   console.log(req.params.projectId + " <----- \n" + req.params.id + " <---------")
-
   Project.findByIdAndUpdate(req.params.projectId,{$pull:{"users" : req.params.id}},function(err,project) {
     if(err) throw(err);
     res.json(project);
-   })
+  })
 });
 
 
@@ -217,8 +219,7 @@ projectRouter.get('/',function(req,res) {
 })
 .put('/:_id', function(req,res){
   Project.findOneAndUpdate({ _id :req.params._id }, { $set: { sign : req.body.sign , title : req.body.title,description :req.body.description }}, { new: true }, function(err, doc) {
-     if(err) {
-            
+     if(err) {          
             console.log(err);
             res.send({
                 message :'something went wrong'
@@ -229,8 +230,12 @@ projectRouter.get('/',function(req,res) {
             });
         }
 });
+})
+.delete('/:_id',function(req,res){
+  Project.remove({"_id" : req.params._id},function(err,res){ 
+    if(err) throw(err);
+  })
 });
-
 
 
 /*
@@ -282,11 +287,13 @@ commentRouter
   });
 })
 .delete('/:id/task/:taskId',function(req,res) {
+  Comment.remove({"_id":req.params.id},function (err, successIndicator) {
+    if(err) throw(err);
    Task.findByIdAndUpdate(req.params.taskId,{$pull:{"comments" : req.params.id}},function(err,task) {
     if(err) throw(err);
     res.json(task);
    })
- 
+});
    })
 .get('/:id',function (req,res,next){
   Task.findOne({ '_id' : req.params.id }, function(err,entry){
@@ -295,8 +302,34 @@ commentRouter
           res.json(docs);
         })
     })
-});
+})
+.put('/:id/task/:taskId',function(req,res,next) {
+  console.log(req.params.taskId + "<=--------------");
 
+})
+.post('/upd/:id', function(req,res){
+  
+  Comment.findOneAndUpdate({ _id :req.params.id }, { $set: {  text : req.body.text}}, { new: true }, function(err, doc) {
+     if(err) {
+            console.log(err);
+            res.send({
+                message :'something went wrong'
+            });
+        } else {
+            res.send({
+                message:'the appointment has bees saved'
+            });
+        }
+})
+})
+.get('/upd/:id', function(req,res,next){
+      
+      Comment.findOne({ _id : req.params.id},function(err, comment){
+        if (err) throw(err);
+          console.log("from CommentGEt " + comment);
+          res.json(comment);
+        })
+});
 
 app.use('/tasks/', taskRouter);
 app.use('/user/',userRouter);

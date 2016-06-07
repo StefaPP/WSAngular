@@ -12,7 +12,9 @@ var userSchema = new Schema ({
 		type : String,
 		required : true
 	},
-	role : String
+	role : String,
+    projects : [{ type:Schema.Types.ObjectId, ref : 'Project'}],
+    tasks : [{ type:Schema.Types.ObjectId, ref : 'Task'}]
 });
 userSchema.pre('save', function (next) {
     var user = this;
