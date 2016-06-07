@@ -1,12 +1,12 @@
 (function(angular) {
 angular.module('userResource',['ngResource'])
  	.factory('User',function($resource) {
-		var User = $resource('/user/:id',{id : '@id'},
+		var User = $resource('/user/:id',{id :'@id'},
 		
 		{
      	save : {
 					method:'POST',
-					url : '/user/project/:id/user/:userId'},
+					url : '/user/project/:projectid/user/:id'},
 		deleteUser : { 
 					method:'delete',
 					url:"/user/:id/project/:projectId"}

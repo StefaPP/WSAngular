@@ -54,19 +54,22 @@
 
 
 			var projectDetails = function (){
+		
 			var proj_id = $stateParams.id;
 			$scope.Comment = new Comment();
 			$scope.commentAdd = new Comment();
 			$scope.commentUpd =new Comment();
-		//	$scope.Comments = new Comment();
+	
 			$scope.task = new Task();
 			$scope.user = new User();
 			$scope.project = Project.get({ _id : proj_id});
-			$scope.User = User.query();
+			//$scope.User = new User();
+		
+			$scope.User = new User();
 			$scope.currentUser = $rootScope.getCurrentUser().username;
             $scope.currentUser.role = $rootScope.getCurrentUserRole();
-            console.log($rootScope.getCurrentUserRole());
-			}
+        
+        	}
 
 			projectDetails();
 
@@ -76,6 +79,7 @@
 			$scope.value = $scope.value ? false : true;
 
 		}
+				
 
 		    $scope.value2 = false;
 			$scope.show2 = function() {
@@ -120,14 +124,12 @@
 			$scope.valueForUpdateComment = false;
 			$scope.updateCommentShow = function(id){
 				$scope.commentUpd = Comment.commentGet({ id : id});
-				console.log(Comment.commentGet({ id : id}))
 				$scope.commentUpd._id = id;
 				$scope.valueForUpdateComment = $scope.valueForUpdateComment ? false : true;
 			}	
 
 			$scope.updateComment = function(taskId,id) {
 					$scope.valueForUpdateComment = false;
-					console.log('from updateComment ' + console.log($scope.commentUpd));
 					Comment.commentPost({id : id},$scope.commentUpd,
                    function(data) {
                       // success
@@ -139,29 +141,41 @@
                    });
 				}
 
-			$scope.addTask = function(id) {
-			$scope.task.$save({ projectId : id},projectDetails);
+			$scope.addTask = function(id,userId) {
+			$scope.task.$save({ projectId : id , userId : userId},projectDetails);
 			$scope.task = new Task();
 	  }
 
 		    $scope.deleteTask  = function(task,project) {
-		   	console.log(project._id + " <++++++++++++++++");
 		  	Task.deleteTask({ _id : task._id , projectId : project._id},projectDetails);
 		  }
 
+		  	$scope.valueForUpdateTask = false;
+
+			$scope.updateTaskShow = function(id){
+				$scope.taskUpd =  Task.getTask({ id : id});
+				$scope.taskUpd._id = id;	
+             	$scope.valueForUpdateTask = $scope.valueForUpdateTask ? false : true;
+			}	
+
+			$scope.updateTask = function(id,projid){
+				console.log(id + " id taska jbng")
+				Task.taskUpdate($scope.taskUpd,projectDetails);
+				$scope.valueForUpdateTask = false;
+			}
+
+
 		  	$scope.addUserToProject = function(projectId,userId) {
-		  	console.log('pro ' + projectId + ' userId ' + userId )
-		  	$scope.user.$save({ id : projectId , userId : userId},projectDetails);
-		 
+		  	$scope.user.$save({ projectid : projectId , id : userId},projectDetails);
 		  	}
 
 		  	$scope.deleteUserFromProject = function(userId,projectId) 			
 		  	{
 
-			console.log(userId + "<-------------" + "-------->" + projectId);
-            User.deleteUser({ id : userId , projectId : projectId},projectDetails);
+		    User.deleteUser({ id : userId , projectId : projectId},projectDetails);
 
 		  	}
+
 
 		}).controller('DropdownCtrl', function ($scope, $log) {
 			  $scope.items = [

@@ -8,12 +8,16 @@ angular.module('taskResource',['ngResource'])
 					},
 					save:{
 						method:'POST',
-						url : 'tasks/project/:projectId'
+						url : 'tasks/project/:projectId/userId/:userId'
 					},
 					deleteTask:{
 						method:'DELETE',
 						url : 'tasks/:_id/project/:projectId'
-					}
+					},
+					getTask:{method:'GET',
+							 url: '/tasks/upd/:id'
+							},
+					taskUpdate : { method :'POST',url : '/tasks/upd/:_id',_id:'@_id'}
 				}
 				);
 	        return Task;
