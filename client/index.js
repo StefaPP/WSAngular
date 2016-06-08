@@ -1,6 +1,6 @@
 (function(angular) {
 
-var myApp = angular.module('myApp',['ngRoute','ui.router','ngResource','dashboard','task','user','project','ui.bootstrap','comment','authentication','login','signup']);
+var myApp = angular.module('myApp',['ngRoute','ui.router','ngResource','chars','dashboard','task','user','project','ui.bootstrap','comment','authentication','login','signup','chars']);
 
 myApp
 .config(config)
@@ -55,6 +55,11 @@ function config($stateProvider,$urlRouterProvider) {
 	.state('about',{
 		url:'/about',
 		templateUrl: 'about.html'
+	})
+	.state('chars',{
+		url:'/chars',
+		templateUrl: 'chars/chars.html',
+		controller: 'charsCtrl'
 	})
 }
 function run($rootScope, $http, $location, $localStorage, AuthenticationService, $state) {

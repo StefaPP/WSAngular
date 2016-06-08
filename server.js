@@ -210,13 +210,26 @@ Task.findOne({ _id : req.params.id},function(err, task){
 var userRouter = express.Router();
 userRouter
 .get('/:user',function(req,res){
-  console.log(req.params.user + "<--- ovog trazim \n")
-  User.find({"username" : req.params.user},function(err,user){
-    console.log(user + "<--- ovog sam ")
+  console.log('USER')
+  User.findOne({"username" : req.params.user},function(err,user){
+    console.log('Find user ' + user);
     if(err) throw(err);
     res.json(user);
   })
 
+})
+.get('/tasks/:id',function (req,res,next){
+  User.findOne({ "_id" : req.params.id }, function(err,user){
+      if(err) console.log(err);
+      console.log(user + " DA li ovaj kilja glup?")
+        Task.find({ "_id" : { $in: user.tasks }})
+        .populate('project')
+        .populate('users')
+        .exec(function(err, task) {
+         if (err) console.log(err);
+         res.json(task);
+    });
+  })
 })
 .get('/',function(req,res) {
 		User.find(function(err,docs) {
@@ -326,32 +339,6 @@ projectRouter.get('/',function(req,res) {
   })
 });
 
-
-/*
-.put('/:id', function(req, res, next) {
-   
-    Project.findOne({
-      "_id": req.params.id
-    }, function(err, project) {
-      if (err) throw(err);
-      /*var newProject = req.body;
-      console.log(newProject + " <--------------");
-
-      
-     var newProject = new Project({
-       sign : req.body.sign,
-       title : req.body.title,
-       description : req.body.description
-     });       
-
-     
-     project.save(function(err, project) {
-     if (err) throw(err);
-      res.json(project);
-      });
-    })
-})    
-*/
 
 var commentRouter = express.Router();
 

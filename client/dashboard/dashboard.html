@@ -1,3 +1,49 @@
-<div>
-<h1>User : {{user.username}}</h1>
+<h1> Hello user: {{user.username}} </h1>
+<div class="form-group">
+	 <table class="table">
+ <tr><th><label>Search: <input ng-model="searchText"></label></th>
+ 	 <th>
+ 	 	<div class="btn-group" data-ng-class="{open: open}">
+	 	 	 <select class="form-control" ng-model="task">
+	 	 	 	  <option value=""> Select Status </option>
+	              <option value="To Do">To Do</option>
+	              <option value="In progress">In progress</option>
+	              <option value="Verify">Verify</option>
+	              <option value="Done">Done</option>
+	          </select>
+	    </div>
+      </th> 
+      <th>
+ 	 	<div class="btn-group" data-ng-class="{open: open}">
+	 	 	 <select class="form-control" ng-model="taskPro">
+	 	 	 	  <option value="">Select Priority</option>
+	 	 	 	  <option value="Major"> Major </option>
+	              <option value="Blocker">Blocker</option>
+	              <option value="Critical">Critical</option>
+	              <option value="Minor">Minor</option>
+	              <option value="Trivial">Trivial</option>
+	          </select>
+	    </div>
+      </th>     
+ </tr>	 
+
+ <tr>
+ <th>Title</th>
+ <th>Description</th>
+ <th>Priority</th>
+ <th>Status</th>
+
+ <th>&nbsp;</th>
+ <th>&nbsp;</th>
+ <th>&nbsp;</th>
+ </tr>
+ 
+ <tbody ng-repeat="task in Tasks | filter:searchText | filter:task | filter:taskPro  " >
+
+ <tr>
+	 <td>{{task.title  }} </td>
+	 <td>{{task.description }} </td>
+	 <td>{{task.priority }} </td>
+	 <td>{{task.status }}</td>
+ </tr>	 
 </div>

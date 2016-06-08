@@ -5,8 +5,8 @@ angular.module('userResource',['ngResource'])
 		{
      	save : {method:'POST',url : '/user/project/:projectid/userId/:id'},
 		deleteUser : { method:'delete',url:"/user/:id/project/:projectId"},
-		getUsers: {method:'GET',url:'/user/users/:taskId',isArray:true}
-		
+		getUsers: {method:'GET',url:'/user/users/:taskId',isArray:true},
+		getTasks: {method: 'GET', url:'/user/tasks/:id',isArray:true}
 		}
 		
 		);
