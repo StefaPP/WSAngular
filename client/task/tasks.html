@@ -31,47 +31,51 @@
  <td>{{task.description}}</td>
  <td>{{task.priority}}</td>
  <td>{{task.status}}</td>
- <td>{{task.createdAt}}</td>
- <td><ul ng-repeat="user in task.users"><li>{{}}</li></ul>
-  <td><!-- <button class="btn btn-warning" ng-click="updateTaskShow(task._id)">Edit task</button> -->
+ <td>{{task.createdAt | date:'medium'}}</td>
+  <td>
+  <div class="btn-group" uib-dropdown is-open="status1.isopen1">
+      <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled" ng-click="getUser(task._id)">Users
+     <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button"
+      ng-repeat="user in Users">
+   	   <li>{{user.username}}</li>
+       </ul>
+    </div>
+ </td>
+ <td>
   <div class="btn-group" uib-dropdown is-open="status.isopen">
       <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">Action
      <span class="caret"></span>
       </button>
-    
       <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-    <!-- <li role="menuitem"><button class="btn btn-default" ng-click="deleteTask(task,project)">Delete task</button></li>
-    <li role="menuitem"><button class="btn btn-default" ng-click="comment(task._id)">Comment</button></li>
- 
-  	 -->
-   	 <li role="menuitem"><a  ng-click="comment(task._id)">Comment task</a>
-  	<li role="menuitem?"><a ng-click="updateTaskShow(task._id)">Edit task</a>
-  	<li role="menuitem"><a ng-click="deleteTask(task,project)">Delete task</a>
-  </ul>
+        <li role="menuitem"><a  ng-click="comment(task._id)">Comment task</a>
+      <li role="menuitem?"><a ng-click="updateTaskShow(task._id)">Edit task</a>
+     <li role="menuitem"><a ng-click="deleteTask(task,project)">Delete task</a>
+     </ul>
     </div>
  </td>
  </tr>
-  <tr ng-show ="commentId==task._id">
+  <tr ng-show ="commentId==task._id && hide">
   <td colspan="3"><div class="form-group">
   <label for="comment">Comment:</label>
   <textarea class="form-control" ng-model="commentAdd.text" rows="3" cols="80" id="comment"></textarea><br/>
   <button type="button" class="btn btn-primary" ng-click="addComment(task._id)" ng-disabled="!commentAdd.text">Add comment</button>
+  <button ng-click="hideComment()" type="button" class="btn btn-default" aria-label="Left Align">
+  Cancel&nbsp;<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+</button>
   <br/><br/>
   <ul ng-repeat="comments in Comments">
   <li><div style="width:500px;max-width:500px;display:inline-block;background-color:lightgray;"><p>{{comments.text}}</p></div><p class="text-right">
-  <i style="color:gray">by:{{comments.signedBy}}</i></p>
+  <i style="color:gray">by:{{comments.signedBy}}<br/>{{comments.createdAt | date:'medium'}}<br/>
+  <div ng-if="edited" class="text-right">edited at : {{comments.updatedAt | date:'medium'}}</div></i></p>
   <div>
   <button type="button" class="btn btn-danger" ng-click="deleteComment(comments._id,task._id)"
    ng-if="comments.signedBy === currentUser">Delete</button>
   <button type="button" class="btn btn-warning" ng-click="updateCommentShow(comments._id)"
    ng-if="comments.signedBy === currentUser">Update</button>   
-
-  </div>
-  </div>
-<div ng-show="valueForUpdateComment">
-
+ <div ng-show="updateId==comments._id">
 <table class="table">
-  
   <tbody>
       <tr >
           <td>
@@ -84,6 +88,9 @@
   </tbody>
 </table>
 </div>
+  </div>
+  </div>
+
   </li>
   </ul>
   </td>
@@ -100,6 +107,7 @@
           <th>Description</th>
           <th>Priority</th>
           <th>Status</th>
+          <th>&nbsp;</th>
       </tr>
   </thead>
   <tbody>
@@ -127,7 +135,11 @@
               <option value="Done">Done</option>
           </select>
           </td>
-        <td><button class="btn btn-primary" ng-click="updateTask(taskUpd._id)">Update task</button></td>
+        <td><button class="btn btn-primary" ng-click="updateTask(taskUpd._id)">Update task</button>
+          <button ng-click="hideTaskEdit()" type="button" class="btn btn-default" aria-label="Left Align">
+  Cancel&nbsp;<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+</button>
+        </td>
       </tr>
   </tbody>
 </table>
@@ -206,9 +218,9 @@
  <hr/>
  <br/>
  <div class="jumbotron">
-  <form name="myForm">
+  <form name="myForm" class="form">
     <label for="repeatSelect"> Choose user: </label>
-    <select name="repeatSelect" id="repeatSelect" ng-model="user.repeatSelect">
+    <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="user.repeatSelect">
       <option ng-repeat="user in Users" value="{{user._id}}">{{user.username}}</option>
     </select>
   <br/>

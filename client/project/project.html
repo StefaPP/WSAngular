@@ -6,15 +6,14 @@
   <th>Title</th>
   <th>Description</th>
   <th>&nbsp;</th>
-  <th>&nbsp;</th>
-  <th>&nbsp;</th>
   		<tr ng-repeat="project in Project">
         <td>{{project.sign}}</td>
          <td>{{project.title}}</td>
          <td>{{project.description}}</td>
-          <td><button class="btn btn-danger" ng-click="deleteProject(project._id)">Remove</button></td>
-						<td><button class="btn btn-warning" ng-click="updateProjectShow(project._id)" >Update Project</button></td>
-           <td><button class="btn btn-info" ng-click="details(project)">Details</button></td>
+          <td><button class="btn btn-danger" ng-click="deleteProject(project._id)">Remove</button>
+					<button class="btn btn-warning" ng-click="updateProjectShow(project._id)" >Update Project</button>
+          <button class="btn btn-info" ng-click="details(project)">Details</button>
+          </td>
    </tr>
 	</table>
   <td><button class="btn btn-primary" ng-click="show()">&nbsp;&nbsp;&nbsp;&nbsp;Add new project &nbsp;&nbsp;&nbsp;&nbsp;</button>

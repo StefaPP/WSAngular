@@ -1,6 +1,6 @@
 (function(angular) {
 
-var myApp = angular.module('myApp',['ngRoute','ui.router','ngResource','task','user','project','ui.bootstrap','comment','authentication','login','signup']);
+var myApp = angular.module('myApp',['ngRoute','ui.router','ngResource','dashboard','task','user','project','ui.bootstrap','comment','authentication','login','signup']);
 
 myApp
 .config(config)
@@ -24,8 +24,8 @@ function config($stateProvider,$urlRouterProvider) {
 	})
 	.state('home',{
 		url:'/home',
-		templateUrl: 'dashboard.html',
-		controller : 'taskCtrl'
+		templateUrl: 'dashboard/dashboard.html',
+		controller : 'dashboardCtrl'
 	})
 	.state('projectTask',{
 		url: '/project/:id',

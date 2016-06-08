@@ -121,12 +121,22 @@ Task.findOne({ _id : req.params.id},function(err, task){
           res.json(task);
         })
 })
+/*.get('/users/:id',function(res,req){
+  console.log(req.params.id + " <--------STA IMAM ODJE");
+  Task.findOne({ "_id" : req.params.id})
+        .populate('comments')
+        .populate('users')
+        .exec(function(err, task){
+         if (err) throw(err);
+          res.json(task);
+        })
+})*/
 .get('/:id',function (req,res,next){
   Project.findOne({ "_id" : req.params.id }, function(err,project){
       if(err) console.log(err);
-
         Task.find({ "_id" : { $in: project.tasks }})
         .populate('comments')
+        .populate('users')
         .exec(function(err, project) {
      		 if (err) console.log(err);
 	  		 res.json(project);
@@ -174,7 +184,10 @@ Task.findOne({ _id : req.params.id},function(err, task){
 
   Task.findByIdAndUpdate(taskic._id,{$push:{"users":req.params.userId }},function (err, entry) {
         if(err) throw(err);
-      })
+  User.findByIdAndUpdate(req.params.userId,{$push:{"tasks": taskic._id}},function (err, entry) {
+        if(err) throw(err);
+      })   
+  })
 		if(err) throw(err);
 	Project.findByIdAndUpdate(project._id,{$push:{"tasks":task._id}},function (err, entry) {
         if(err) next(err);
@@ -196,13 +209,31 @@ Task.findOne({ _id : req.params.id},function(err, task){
 
 var userRouter = express.Router();
 userRouter
+.get('/:user',function(req,res){
+  console.log(req.params.user + "<--- ovog trazim \n")
+  User.find({"username" : req.params.user},function(err,user){
+    console.log(user + "<--- ovog sam ")
+    if(err) throw(err);
+    res.json(user);
+  })
+
+})
 .get('/',function(req,res) {
 		User.find(function(err,docs) {
 			if(err) console.error(err);
 			res.json(docs);
 		});
 })
-.get('/:id',function(req,res) {
+.get('/users/:taskId',function(req,res) {
+
+  Task.findOne({"_id" : req.params.taskId},function(err,task){
+    if(err) throw(err);
+    User.find({"_id" : {$in:task.users}},function(err, docs){
+          if(err) throw(err);
+          res.json(docs);
+      })
+   })
+}).get('/:id',function(req,res) {
     User.findOne({ _id: req.params.id},function(err,docs) {
       if(err) console.error(err);
       res.json(docs);
@@ -225,6 +256,7 @@ userRouter
   console.log(req.params.projectId + " <----- \n" + req.params.id + " <---------")
   Project.findByIdAndUpdate(req.params.projectId,{$pull:{"users" : req.params.id}},function(err,project) {
   User.findByIdAndUpdate(req.params.id,{$pull:{"projects" : req.params.projectId}},function(err,project) {
+
     if(err) throw(err);
   })
     if(err) throw(err);
@@ -353,9 +385,9 @@ commentRouter
 });
    })
 .get('/:id',function (req,res,next){
-  Task.findOne({ '_id' : req.params.id }, function(err,entry){
+  Task.findOne({ '_id' : req.params.id }, function(err,task){
       if(err) next (err);
-        Comment.find({ '_id' : { $in:entry.comments}},function(err, docs){
+        Comment.find({ '_id' : { $in: task.comments}},function(err, docs){
           res.json(docs);
         })
     })
@@ -365,8 +397,8 @@ commentRouter
 
 })
 .post('/upd/:id', function(req,res){
-  
-  Comment.findOneAndUpdate({ _id :req.params.id }, { $set: {  text : req.body.text}}, { new: true }, function(err, doc) {
+  Comment.findOneAndUpdate({ _id :req.params.id }, { $set: {  text : req.body.text,
+    updatedAt : req.body.updatedAt}}, { new: true }, function(err, doc) {
      if(err) {
             console.log(err);
             res.send({

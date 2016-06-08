@@ -4,13 +4,9 @@
 		.controller('projectCtrl',function($scope,Project,User,Task,$location,Comment) {
 				$scope.location = $location;
 				var loadProject = function() {
+
 					$scope.Project = Project.query();
 					$scope.project = new Project();
-					
-					
-					console.log($scope.User);
-					$scope.user = new User();
-					$scope.User = User.query();
 					$scope.projectUpd = new Project();
 
 				}
@@ -64,8 +60,7 @@
 			$scope.task = new Task();
 			$scope.user = new User();
 			$scope.project = Project.get({ _id : proj_id});
-			//$scope.User = new User();
-		
+	
 			$scope.User = new User();
 			$scope.currentUser = $rootScope.getCurrentUser().username;
             $scope.currentUser.role = $rootScope.getCurrentUserRole();
@@ -88,12 +83,23 @@
 
 		}
 
+			$scope.hide = false;
 			$scope.commentId = null;
 			$scope.comment = function(id) {
-			$scope.commentId = $scope.id ? null : id;
+			$scope.commentId = $scope.id ? ($scope.commentId = null) : id;
 			$scope.Comments = Comment.query({ id : id });
-
+			$scope.hide = !$scope.hide
 		}
+		    $scope.getUser = function(taskId){
+		  	console.log(taskId);
+		  	$scope.Users = User.getUsers({ taskId : taskId});
+		  	console.log($scope.Users);
+
+		  }
+
+		  $scope.hideComment = function() {
+		  	$scope.hide = !$scope.hide
+		  }
 
 		  $scope.addComment = function(id) {
 
@@ -122,19 +128,24 @@
                     });
 			}
 
-			$scope.valueForUpdateComment = false;
+
+
+			$scope.updateId = null;
 			$scope.updateCommentShow = function(id){
 				$scope.commentUpd = Comment.commentGet({ id : id});
 				$scope.commentUpd._id = id;
-				$scope.valueForUpdateComment = $scope.valueForUpdateComment ? false : true;
+				$scope.updateId = $scope.id ? null : id;
+				$scope.edited = false;
 			}	
 
 			$scope.updateComment = function(taskId,id) {
-					$scope.valueForUpdateComment = false;
+					$scope.updateId = null;
+					$scope.commentUpd.updatedAt = new Date();
 					Comment.commentPost({id : id},$scope.commentUpd,
                    function(data) {
                       // success
                     $scope.Comments = Comment.query({ id : taskId });
+                    $scope.edited = true;
 					projectDetails();
 					//	projectDetails();
                    }, function(e) {
@@ -175,28 +186,29 @@
 				$scope.valueForUpdateTask = false;
 			}
 
+			$scope.hideTaskEdit = function() {
+		  	$scope.valueForUpdateTask = !$scope.valueForUpdateTask;
+
+		  }
+
 
 		  	$scope.addUserToProject = function(projectId,userId) {
 		  	$scope.user.$save({ projectid : projectId , id : userId},projectDetails);
 		  	}
 
-		  	$scope.deleteUserFromProject = function(userId,projectId) 			
-		  	{
-
+		  	$scope.deleteUserFromProject = function(userId,projectId){
 		    User.deleteUser({ id : userId , projectId : projectId},projectDetails);
-
-		  	}
+			}
 
 
 		}).controller('DropdownCtrl', function ($scope, $log) {
-			  $scope.items = [
-			    'The first choice!',
-			    'And another choice for you.',
-			    'but wait! A third!'
-			  ];
-
+			
 			  $scope.status = {
 			    isopen: false
+			  };
+
+			    $scope.status1 = {
+			    isopen1: false
 			  };
 
 			  $scope.toggled = function(open) {
@@ -207,8 +219,9 @@
 			    $event.preventDefault();
 			    $event.stopPropagation();
 			    $scope.status.isopen = !$scope.status.isopen;
+			 	$scope.status1.isopen1 = !$scope.status1.isopen1;
+			 	
 			  };
-
 			  $scope.appendToEl = angular.element(document.querySelector('#dropdown-long-content'));
 });
 }(angular));
