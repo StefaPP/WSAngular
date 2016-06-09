@@ -8,7 +8,8 @@ angular.module('taskResource',['ngResource'])
 			deleteTask:{method:'DELETE',url : 'tasks/:_id/project/:projectId'},
 			getTask:{method:'GET',url: '/tasks/upd/:id'},
 			oldTasks:{method:'get',url:'/tasks/oldTasks/:_id',isArray:true},
-			taskUpdate : { method :'POST',url : '/tasks/upd/:_id',_id:'@_id'}
+			taskUpdate : { method :'POST',url : '/tasks/upd/:_id',_id:'@_id'},
+			getProject : {method : 'GET', url : '/tasks/taskFromProject/:_id'}
 		});
 	        return Task;
 })

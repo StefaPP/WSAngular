@@ -1,20 +1,25 @@
+<div>
 <h1> Hello user: {{user.username}} </h1>
+<button class="btn btn-primary" ng-click="loadThumbs(user._id)">Show projects</button><br/>
+<br/>
+<br/><br/>
+<div class="col" ng-repeat="project in Projects" ng-show="value">
+  <div class="col-md-4">
+    <a ng-href="#/project/{{project._id}}" class="thumbnail">
+      <p>{{project.sign}}</p>
+      <p>{{project.title}}</p>
+      <p>{{project.description}}</p>
+      <img src="https://d13yacurqjgara.cloudfront.net/users/84829/screenshots/1026268/project-icon.png" style="width:250px;height:200px">
+    </a>
+  </div>
+</div>
+
 <div class="form-group">
 	 <table class="table">
  <tr><th><label>Search: <input ng-model="searchText"></label></th>
+ 	<th>&nbsp;</th>
  	 <th>
- 	 	<div class="btn-group" data-ng-class="{open: open}">
-	 	 	 <select class="form-control" ng-model="task">
-	 	 	 	  <option value=""> Select Status </option>
-	              <option value="To Do">To Do</option>
-	              <option value="In progress">In progress</option>
-	              <option value="Verify">Verify</option>
-	              <option value="Done">Done</option>
-	          </select>
-	    </div>
-      </th> 
-      <th>
- 	 	<div class="btn-group" data-ng-class="{open: open}">
+ 	 <div class="btn-group" data-ng-class="{open: open}">
 	 	 	 <select class="form-control" ng-model="taskPro">
 	 	 	 	  <option value="">Select Priority</option>
 	 	 	 	  <option value="Major"> Major </option>
@@ -22,6 +27,17 @@
 	              <option value="Critical">Critical</option>
 	              <option value="Minor">Minor</option>
 	              <option value="Trivial">Trivial</option>
+	          </select>
+	    </div>
+      </th> 
+      <th>
+ 	 	<div class="btn-group" data-ng-class="{open: open}">
+	 	 	 <select class="form-control" ng-model="task">
+	 	 	 	  <option value=""> Select Status </option>
+	              <option value="To Do">To Do</option>
+	              <option value="In progress">In progress</option>
+	              <option value="Verify">Verify</option>
+	              <option value="Done">Done</option>
 	          </select>
 	    </div>
       </th>     
@@ -32,18 +48,18 @@
  <th>Description</th>
  <th>Priority</th>
  <th>Status</th>
-
- <th>&nbsp;</th>
- <th>&nbsp;</th>
- <th>&nbsp;</th>
  </tr>
  
  <tbody ng-repeat="task in Tasks | filter:searchText | filter:task | filter:taskPro  " >
 
  <tr>
-	 <td>{{task.title  }} </td>
-	 <td>{{task.description }} </td>
-	 <td>{{task.priority }} </td>
-	 <td>{{task.status }}</td>
- </tr>	 
+	 <td>{{task.title}} </td>
+	 <td>{{task.description}} </td>
+	 <td>{{task.priority}} </td>
+	 <td>{{task.status}}</td>
+	 <td><button class="btn btn-primary" ng-click="redirect(task._id)">Redirect</button></td>
+ </tr>
+ </tbody>
+ </table>	 
+</div>
 </div>

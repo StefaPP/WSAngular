@@ -28,9 +28,8 @@
 				$scope.go = function() {
 					$location.url('/tasks')
 				};
-
 				loadProject();
-
+				
 				$scope.addProject = function() {
 					Project.save($scope.project,loadProject);
 				};
@@ -40,7 +39,14 @@
 					Project.update($scope.projectUpd,loadProject);
 				}
 				$scope.deleteProject = function(id){
-					Project.delete({ _id : id},loadProject);
+					Project.delete({ _id : id}, function(data) {
+                      // success
+					
+					loadProject();
+					//	projectDetails();
+                   }, function(e) {
+                      // failure
+                   })
 				}
 
 				$scope.details = function(project) {
@@ -56,11 +62,10 @@
 			$scope.Comment = new Comment();
 			$scope.commentAdd = new Comment();
 			$scope.commentUpd =new Comment();
-            $scope.Users = User.query();
+            
 			$scope.task = new Task();
 			$scope.user = new User();
 			$scope.project = Project.get({ _id : proj_id});
-	
 			$scope.User = new User();
 			$scope.currentUser = $rootScope.getCurrentUser().username;
             $scope.currentUser.role = $rootScope.getCurrentUserRole();
@@ -79,8 +84,8 @@
 
 		    $scope.value2 = false;
 			$scope.show2 = function() {
+			$scope.Users = User.findUsers({ proja : $scope.project._id});
 			$scope.value2 = $scope.value2 ? false : true;
-
 		}
 
 			$scope.hide = false;
@@ -195,11 +200,28 @@
 
 
 		  	$scope.addUserToProject = function(projectId,userId) {
-		  	$scope.user.$save({ projectid : projectId , id : userId},projectDetails);
+		  	$scope.user.$save({ projectid : projectId , id : userId},function(data) {
+                    $scope.Users = User.findUsers({ proja : $scope.project._id});
+					projectDetails();
+                   }, function(e) {
+                   
+                   });
+
+                   /*projectDetails);
+			$scope.Users = User.findUsers({ proja : $scope.project._id});*/
+			
 		  	}
 
 		  	$scope.deleteUserFromProject = function(userId,projectId){
-		    User.deleteUser({ id : userId , projectId : projectId},projectDetails);
+			User.deleteUser({ id : userId , projectId : projectId}, function(data) {
+                    $scope.Users = User.findUsers({ proja : $scope.project._id});
+					projectDetails();
+                   }, function(e) {
+                   
+                   });
+
+                   /*projectDetails);
+			$scope.Users = User.findUsers({ proja : $scope.project._id});*/
 			}
 
 

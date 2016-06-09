@@ -21,6 +21,7 @@
 <script src="signup/signup.js"></script>
 <script src="login/login.js"></script>
 <script src="chars/chars.js"></script>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -170,7 +171,7 @@ li.topright {
   <ul class="nvb" ng-if="isLoggedIn()">
     <li><a ui-sref="home">Dashboard</a></li>
     <li><a ui-sref="projects" >Projects</a></li>
-    <li><a ui-sref="account" >Account</a></li>
+    <li><a ui-sref="account" >Users</a></li>
     <li><a ui-sref="about">About</a></li>
     <li><a ui-sref="chars">Chars</a></li>
     <li class="topright"><a ng-if="isLoggedIn()" ng-click="logout()">Log out</a></li>

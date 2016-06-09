@@ -38,9 +38,6 @@ loginRouter.post('/signup', function(req, res) {
           role : 'user'
       })
     }
-
-   
-
     newUser.save(function(err) {
       if (err) throw(err)
       else  res.json({success: true, msg: 'Successful created new user.'});
@@ -97,6 +94,17 @@ loginRouter.post('/signup', function(req, res) {
 
 var taskRouter = express.Router();
 taskRouter
+.get('/taskFromProject/:_id',function(req,res){
+  Task.findOne({"_id" : req.params._id},function(err,task){
+    if(err) throw(err);
+  
+  Project.findOne({"tasks" : {$eq: task._id }},function(err,project){
+    if(err) throw(err);
+    
+    res.json(project);
+  })
+  })
+})
 .post('/upd/:_id',function(req,res,next){
   console.log(req.params._id + " USAO U UPDATE <----------------\n\n")
   
@@ -106,17 +114,12 @@ taskRouter
     priority : req.body.priority,
     status : req.body.status
   });
-  
-  console.log(taskenzi + "<------- NOVI");
-  taskenzi.save();
-  //Posaljem id taska koji updajtujem ,preuzmem parametre ,taskenzi je novi
-  
+
   Task.findOneAndUpdate({ "_id" :req.params._id }, { $set: {  title : req.body.title,
     description : req.body.description,
     priority : req.body.priority,
     status : req.body.status},$push:{"oldTask" : taskenzi._id }}, { new: true}, function(err, doc) {
-       console.log(doc + "<--------- DA LI SI ISTO KAO I NOVI??")
-         if(err) {
+     if(err) {
             console.log(err);
             res.send({
                 message :'something went wrong'
@@ -152,6 +155,7 @@ Task.findOne({ _id : req.params.id},function(err, task){
         .populate('users')
         .exec(function(err, project) {
      		 if (err) console.log(err);
+
 	  		 res.json(project);
     });
   })
@@ -162,7 +166,7 @@ Task.findOne({ _id : req.params.id},function(err, task){
 		res.json(docs);
 	})
 })
-.get('/oldTasks/_id',function(req,res){
+/*.get('/oldTasks/_id',function(req,res){
   Task.findOne({"_id" : req.params._id}, function(err,task) {
     if(err) throw(err);
      Task.find({ "_id" : { $in: task.oldTask }})
@@ -173,11 +177,8 @@ Task.findOne({ _id : req.params.id},function(err, task){
          if (err) console.log(err);
          res.json(t);
     });
-
   }) 
-
-
-})
+})*/
 .post('/project/:projectId',function(req,res){
     
     var taskic = new Task ({
@@ -226,7 +227,6 @@ Task.findOne({ _id : req.params.id},function(err, task){
   });
 })
 .delete('/:_id/project/:projectId',function(req,res,next) {
-  console.log(req.params.projectId + "<------- ProjectID \n" + req.params._id + "<---- TaskID")
   Task.remove({"_id" : req.params._id} , function(err,ress){
     if(err) throw(err);
 	Project.findByIdAndUpdate(req.params.projectId,{$pull:{"tasks" : req.params._id}},function(err,project) {
@@ -238,19 +238,26 @@ Task.findOne({ _id : req.params.id},function(err, task){
 
 var userRouter = express.Router();
 userRouter
+.get('/projects/:id',function(req,res){
+  console.log("<<<<<<<<<<<<<<<<<<<\n" + req.params.id + "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+  User.findOne({"_id" : req.params.id},function(err,user){
+    if (err) throw(err);
+  Project.find({"users" : {$eq : user._id}},function(err,project){
+    console.log(project);
+    if(err) throw(err);
+    res.json(project);
+  })
+  })
+})
 .get('/:user',function(req,res){
-  console.log('USER')
   User.findOne({"username" : req.params.user},function(err,user){
-    console.log('Find user ' + user);
     if(err) throw(err);
     res.json(user);
   })
-
 })
 .get('/tasks/:id',function (req,res,next){
   User.findOne({ "_id" : req.params.id }, function(err,user){
       if(err) console.log(err);
-      console.log(user + " DA li ovaj kilja glup?")
         Task.find({ "_id" : { $in: user.tasks }})
         .populate('project')
         .populate('users')
@@ -265,6 +272,18 @@ userRouter
 			if(err) console.error(err);
 			res.json(docs);
 		});
+})
+.get('/project/:proja',function(req,res) {
+  
+    Project.findOne({"_id" : req.params.proja},function(err,project) {
+      console.log("\n\n projekat " + project  + "\n\n");
+      if(err) throw(err);
+    User.find({"_id" :{ $nin: project.users }},function(err,users) {
+    
+      if(err) console.error(err);
+      res.json(users);  
+        })
+  })
 })
 .get('/users/:taskId',function(req,res) {
 
@@ -363,11 +382,13 @@ projectRouter.get('/',function(req,res) {
 });
 })
 .delete('/:_id',function(req,res){
-  Project.remove({"_id" : req.params._id},function(err,res){ 
+  Project.remove({"_id" : req.params._id},function(err,doc){ 
     if(err) throw(err);
+    res.send({
+                message:'project is removed'
+            });
   })
 });
-
 
 var commentRouter = express.Router();
 
