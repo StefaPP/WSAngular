@@ -21,7 +21,8 @@ var taskSchema = new Schema({
 	},
 	createdBy : String,
 	comments : [{ type:Schema.Types.ObjectId, ref : 'Comment'}],
-	users :    [{ type:Schema.Types.ObjectId, ref : 'User'}]
+	users :    [{ type:Schema.Types.ObjectId, ref : 'User'}],
+	oldTask:   [{ type:Schema.Types.ObjectId, ref : 'Task'}]
 });
 
 taskSchema.pre('save',function(next){

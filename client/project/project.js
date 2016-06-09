@@ -186,6 +186,8 @@
 				$scope.valueForUpdateTask = false;
 			}
 
+			
+			
 			$scope.hideTaskEdit = function() {
 		  	$scope.valueForUpdateTask = !$scope.valueForUpdateTask;
 

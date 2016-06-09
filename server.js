@@ -98,12 +98,25 @@ loginRouter.post('/signup', function(req, res) {
 var taskRouter = express.Router();
 taskRouter
 .post('/upd/:_id',function(req,res,next){
-  console.log(req.params._id + " <----------------")
-  Task.findOneAndUpdate({ _id :req.params._id }, { $set: {  title : req.body.title,
+  console.log(req.params._id + " USAO U UPDATE <----------------\n\n")
+  
+  var taskenzi = new Task({  
+    title : req.body.title,
     description : req.body.description,
     priority : req.body.priority,
-    status : req.body.status}}, { new: true }, function(err, doc) {
-     if(err) {
+    status : req.body.status
+  });
+  
+  console.log(taskenzi + "<------- NOVI");
+  taskenzi.save();
+  //Posaljem id taska koji updajtujem ,preuzmem parametre ,taskenzi je novi
+  
+  Task.findOneAndUpdate({ "_id" :req.params._id }, { $set: {  title : req.body.title,
+    description : req.body.description,
+    priority : req.body.priority,
+    status : req.body.status},$push:{"oldTask" : taskenzi._id }}, { new: true}, function(err, doc) {
+       console.log(doc + "<--------- DA LI SI ISTO KAO I NOVI??")
+         if(err) {
             console.log(err);
             res.send({
                 message :'something went wrong'
@@ -148,6 +161,22 @@ Task.findOne({ _id : req.params.id},function(err, task){
 	 if(err) return console.error(err);
 		res.json(docs);
 	})
+})
+.get('/oldTasks/_id',function(req,res){
+  Task.findOne({"_id" : req.params._id}, function(err,task) {
+    if(err) throw(err);
+     Task.find({ "_id" : { $in: task.oldTask }})
+        .populate('project')
+        .populate('users')
+        .populate('oldTask')
+        .exec(function(err,t) {
+         if (err) console.log(err);
+         res.json(t);
+    });
+
+  }) 
+
+
 })
 .post('/project/:projectId',function(req,res){
     
