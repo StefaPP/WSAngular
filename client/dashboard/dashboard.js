@@ -11,9 +11,14 @@
      		    $http({method: 'GET',url:'/user/'+$scope.currentUser}).then(function successCallback(response) {
             
             $scope.user = response.data;
+            console.log("\n\n")
+            console.log(response.data +"<<<< Da li se odavnde moze nesto izvuci\n\n\n")
+            console.log("<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n")
             $scope.Tasks = User.getTasks({id : $scope.user._id }, function(data) {
                       // success
-                    console.log(data)
+                    console.log("\n\n")
+                    console.log(data +"<<<< Da li se odavnde moze nesto izvuci\n\n\n")
+                    console.log("<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n")
                     return data;
                     //  projectDetails();
                    }, function(e) {
@@ -49,7 +54,7 @@
                    }, function(e) {
                       // failure
                    });
-              console.log('pope' + $scope.project._id)
+              //console.log('pope' + $scope.project._id)
               
             }
 	})

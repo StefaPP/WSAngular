@@ -154,17 +154,17 @@ Task.findOne({ _id : req.params.id},function(err, task){
         .populate('comments')
         .populate('users')
         .exec(function(err, project) {
-     		 if (err) console.log(err);
+         if (err) console.log(err);
 
-	  		 res.json(project);
+         res.json(project);
     });
   })
 })
 .get('/',function(req,res) {
-	Task.find(function(err,docs) {
-	 if(err) return console.error(err);
-		res.json(docs);
-	})
+  Task.find(function(err,docs) {
+   if(err) return console.error(err);
+    res.json(docs);
+  })
 })
 /*.get('/oldTasks/_id',function(req,res){
   Task.findOne({"_id" : req.params._id}, function(err,task) {
@@ -185,13 +185,13 @@ Task.findOne({ _id : req.params.id},function(err, task){
     title : req.body.title,
     description : req.body.description,
     priority : req.body.priority,
-    status : req.body.status,
+    status : req.body.status
   });
-    Project.findOne({"_id":req.params.projectId},function(err,project) {
-    if(err) throw(err);
+
+    Project.findOne({"_id" : req.params.projectId},function(err,project) {
+    if(err) next(err);
     taskic.save(function(err,task){
-        if(err) throw(err);
-    Project.findByIdAndUpdate(project._id,{$push:{"tasks":task._id}},function (err, entry) {
+    Project.findByIdAndUpdate(project._id,{$push:{"tasks":taskic._id}},function (err, entry) {
         if(err) next(err);
         res.json(entry);
       });
@@ -200,36 +200,36 @@ Task.findOne({ _id : req.params.id},function(err, task){
 })
 .post('/project/:id/userId/:userId',function(req,res) {
 
-	var taskic = new Task ({
-		title : req.body.title,
-		description : req.body.description,
-		priority : req.body.priority,
-		status : req.body.status,
-	});
+  var taskic = new Task ({
+    title : req.body.title,
+    description : req.body.description,
+    priority : req.body.priority,
+    status : req.body.status,
+  });
   console.log(req.params.userId + "<___--")
 
-	Project.findOne({"_id":req.params.id},function(err,project) {
-		if(err) throw(err);
-	taskic.save(function(err,task){
+  Project.findOne({"_id":req.params.id},function(err,project) {
+    if(err) throw(err);
+  taskic.save(function(err,task){
 
-  Task.findByIdAndUpdate(taskic._id,{$push:{"users":req.params.userId }},function (err, entry) {
+  Task.findByIdAndUpdate(taskic._id,{$push:{"users":req.params.userId }},function (err, task) {
         if(err) throw(err);
-  User.findByIdAndUpdate(req.params.userId,{$push:{"tasks": taskic._id}},function (err, entry) {
-        if(err) throw(err);
-      })   
-  })
-		if(err) throw(err);
-	Project.findByIdAndUpdate(project._id,{$push:{"tasks":task._id}},function (err, entry) {
-        if(err) next(err);
-        res.json(entry);
-      });
+       User.findByIdAndUpdate(req.params.userId,{$push:{"tasks": taskic._id}},function (err, user) {
+            if(err) throw(err);
+
+          })
+          Project.findByIdAndUpdate(project._id,{$push:{"tasks": taskic._id}},function (err, project) {
+                if(err) next(err);
+                res.json(project);
+              });
+           })   
+         })
     });
-  });
 })
 .delete('/:_id/project/:projectId',function(req,res,next) {
   Task.remove({"_id" : req.params._id} , function(err,ress){
     if(err) throw(err);
-	Project.findByIdAndUpdate(req.params.projectId,{$pull:{"tasks" : req.params._id}},function(err,project) {
+  Project.findByIdAndUpdate(req.params.projectId,{$pull:{"tasks" : req.params._id}},function(err,project) {
     if(err) throw(err);
     res.json(project);
    })
@@ -268,10 +268,10 @@ userRouter
   })
 })
 .get('/',function(req,res) {
-		User.find(function(err,docs) {
-			if(err) console.error(err);
-			res.json(docs);
-		});
+    User.find(function(err,docs) {
+      if(err) console.error(err);
+      res.json(docs);
+    });
 })
 .get('/project/:proja',function(req,res) {
   
@@ -301,17 +301,17 @@ userRouter
     })
   })
 .post('/project/:projectid/userId/:id',function(req,res) {
-	Project.findOne({"_id" : req.params.projectid},function(err,project) {
-		if(err) throw(err);
-	User.findByIdAndUpdate({"_id": req.params.id},{$push:{"projects" : project._id}},function(err,user) {
-		if(err) throw(err);
-	Project.findByIdAndUpdate(project._id,{$push:{"users" : user._id}},function(err, entry) {
+  Project.findOne({"_id" : req.params.projectid},function(err,project) {
+    if(err) throw(err);
+  User.findByIdAndUpdate({"_id": req.params.id},{$push:{"projects" : project._id}},function(err,user) {
+    if(err) throw(err);
+  Project.findByIdAndUpdate(project._id,{$push:{"users" : user._id}},function(err, entry) {
         if(err) throw(err);
         res.json(entry);
 
-			});
-		})
-	})  
+      });
+    })
+  })  
 })
 .delete('/:id/project/:projectId',function(req,res){ 
   console.log(req.params.projectId + " <----- \n" + req.params.id + " <---------")
@@ -329,29 +329,29 @@ userRouter
 var projectRouter = express.Router();
 
 projectRouter.get('/',function(req,res) {
-		Project.find(function(err,docs) {
-			if(err) console.error(err);
+    Project.find(function(err,docs) {
+      if(err) console.error(err);
 
-			res.json(docs);
-		});
+      res.json(docs);
+    });
 })
 .get('/:id',function(req,res) {
-		Project.findOne({
+    Project.findOne({
     "_id": req.params.id
   }).populate('tasks')
-	.populate('users')
-	.exec(function(err, project) {
+  .populate('users')
+  .exec(function(err, project) {
       if (err) console.log(err);
-	  res.json(project);
+    res.json(project);
     });
 })
 .post('/',function(req,res) {
 
-	var projektic = new Project ({
-		sign : req.body.sign,
-		title : req.body.title,
-		description : req.body.description
-	})
+  var projektic = new Project ({
+    sign : req.body.sign,
+    title : req.body.title,
+    description : req.body.description
+  })
 
   projektic.save(function(err,resp) {
         if(err) {
@@ -380,15 +380,37 @@ projectRouter.get('/',function(req,res) {
             });
         }
 });
+}).delete('/:_id',function(req,res){
+Project.findOne({"_id" : req.params._id} ,function(err,project){
+
+ Task.find({"_id" : {$in : project.tasks}},function(err,tasks){
+  if(err) throw(err)
+
+ for(var i =0 ; i < tasks.length; i++){
+  User.findOneAndUpdate({ "_id" : tasks[i].users},{$pull:{"tasks" : tasks[i]._id}},function(err,user){
+    console.log(user + "<<<<<<<<");
+  
+  })
+}
+  Project.remove({"_id" : req.params._id},function(err,project){
+    if(err) throw(err);
+    res.json(project);
+  })
+ })
 })
-.delete('/:_id',function(req,res){
+/* Project.remove({"_id" : req.params._id},function(err,project){ 
+    if(err) throw(err);
+ 
+  })  */
+});
+/*.delete('/:_id',function(req,res){
   Project.remove({"_id" : req.params._id},function(err,doc){ 
     if(err) throw(err);
     res.send({
                 message:'project is removed'
             });
   })
-});
+});*/
 
 var commentRouter = express.Router();
 
@@ -396,7 +418,7 @@ commentRouter
 .post('/:id',function(req, res, next) {
 
   var comment = new Comment({
-  		signedBy : req.body.signedBy,
+      signedBy : req.body.signedBy,
       text : req.body.text
   });
 
@@ -405,7 +427,7 @@ commentRouter
     if(err) next(err);
     comment.save(function (err, comment) {
       if(err) next(err);
-    	Task.findByIdAndUpdate(entry._id, {$push:{"comments":comment._id}}, function (err, entry) {
+      Task.findByIdAndUpdate(entry._id, {$push:{"comments":comment._id}}, function (err, entry) {
         if(err) next(err);
         res.json(entry);
       });

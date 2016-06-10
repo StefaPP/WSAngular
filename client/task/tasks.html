@@ -108,6 +108,7 @@
           <th>Description</th>
           <th>Priority</th>
           <th>Status</th>
+          <th>Users</th>
           <th>&nbsp;</th>
       </tr>
   </thead>
@@ -136,7 +137,11 @@
               <option value="Done">Done</option>
           </select>
           </td>
-        <td><button class="btn btn-primary" ng-click="updateTask(taskUpd._id)">Update task</button>
+          <td>
+         <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="user.repeatSelect">
+        <option ng-repeat="user in project.users" value="{{user._id}}">{{user.username}}</option>
+     </select></td>
+        <td><button class="btn btn-primary" ng-click="updateTask(taskUpd._id,user.repeatSelect)">Update task</button>
           <button ng-click="hideTaskEdit()" type="button" class="btn btn-default" aria-label="Left Align">
   Cancel&nbsp;<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
 </button>
@@ -189,7 +194,6 @@
          <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="user.repeatSelect">
         <option ng-repeat="user in project.users" value="{{user._id}}">{{user.username}}</option>
      </select>
-         
           </td>
             <td>
             <button class="btn btn-primary" ng-click="addTask(project._id,user.repeatSelect)">Add task

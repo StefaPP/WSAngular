@@ -179,7 +179,7 @@
 
 		  	$scope.valueForUpdateTask = false;
 
-			$scope.updateTaskShow = function(id){
+			$scope.updateTaskShow = function(id,userId){
 				$scope.taskUpd =  Task.getTask({ id : id});
 				$scope.taskUpd._id = id;	
              	$scope.valueForUpdateTask = $scope.valueForUpdateTask ? false : true;

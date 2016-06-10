@@ -8,7 +8,8 @@ angular.module('userResource',['ngResource'])
 		getUsers: {method:'GET',url:'/user/users/:taskId',isArray:true},
 		getTasks: {method: 'GET', url:'/user/tasks/:id',isArray:true},
 		findUsers : {method: 'GET', url:'/user/project/:proja',isArray:true},
-		getProjects:{method: 'GET', url:'/user/projects/:id',isArray:true}
+		getProjects:{method: 'GET', url:'/user/projects/:id',isArray:true},
+		getUserByUsername:{mehtod:'GET',url:'/user/getUserByUsername/:username'}
 		}
 		
 		);

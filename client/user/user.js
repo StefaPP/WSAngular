@@ -8,5 +8,9 @@ angular.module('user',['userResource'])
 
 		}
 		loadUsers();
+
+		$scope.removeUser = function(id){
+		User.delete({ id : id},loadUsers);
+		}
 	})
 }(angular));
