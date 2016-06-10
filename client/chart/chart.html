@@ -1,0 +1,15 @@
+<div class="jumbotron">
+    <label for="repeatSelect"> Choose project: </label>
+    <select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="project.repeatSelect">
+      <option ng-repeat="project in Project" value="{{project._id}}">{{project.title}}</option>
+    </select>
+  <br/>
+   <button class="btn btn-primary" ng-click="findUserFromProject(project.repeatSelect)">Make Chart</button>
+</div>
+
+<div>
+<canvas id="line" class="chart chart-line" chart-data="data"
+  chart-labels="labels" chart-legend="true" chart-series="series"
+  chart-click="onClick" >
+</canvas> 
+</div>

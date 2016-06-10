@@ -6,6 +6,9 @@
 <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="../bower_components/ngstorage/ngStorage.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
+<script src="../bower_components/Chart.js/dist/Chart.js"></script>
+<script src="../bower_components/angular-chart/angular-chart.js"></script>
+<script src="../bower_components/angular-chart/angular-chart.min.js"></script>
 <script src="../bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="task/taskResource.js"></script>
 <script src="task/task.js"></script>
@@ -20,7 +23,7 @@
 <script src="dashboard/dashboard.js"></script>
 <script src="signup/signup.js"></script>
 <script src="login/login.js"></script>
-<script src="chars/chars.js"></script>
+<script src="chart/chart.js"></script>
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -173,7 +176,7 @@ li.topright {
     <li><a ui-sref="projects" >Projects</a></li>
     <li><a ui-sref="account" >Users</a></li>
     <li><a ui-sref="about">About</a></li>
-    <li><a ui-sref="chars">Chars</a></li>
+    <li><a ui-sref="chart">Chart</a></li>
     <li class="topright"><a ng-if="isLoggedIn()" ng-click="logout()">Log out</a></li>
   </ul>
   	<a ng-if="!isLoggedIn() && getCurrentState()!=='login'" ui-sref="login"></a>

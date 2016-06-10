@@ -204,9 +204,9 @@ Task.findOne({ _id : req.params.id},function(err, task){
     title : req.body.title,
     description : req.body.description,
     priority : req.body.priority,
-    status : req.body.status,
+    status : req.body.status
   });
-  console.log(req.params.userId + "<___--")
+
 
   Project.findOne({"_id":req.params.id},function(err,project) {
     if(err) throw(err);
@@ -341,6 +341,16 @@ projectRouter.get('/',function(req,res) {
   }).populate('tasks')
   .populate('users')
   .exec(function(err, project) {
+      if (err) console.log(err);
+    res.json(project);
+    });
+})
+.get('/getAll/:projectId',function(req,res) {
+  Project.findOne({ '_id' : req.params.projectId })
+  .populate('tasks')
+  .populate('users')
+  .exec(function(err, project) {
+    console.log("\n" + project + "\n")
       if (err) console.log(err);
     res.json(project);
     });
